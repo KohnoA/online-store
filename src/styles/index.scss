@@ -1,0 +1,30 @@
+@import './null.scss';
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url("../assets/fonts/montserrat/Montserrat-VariableFont_wght.ttf");
+  font-weight: 400;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+.body {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  font-family: 'Montserrat', 'Arial', sans-serif;
+  color: black;
+
+  background-color: white;
+}
+
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+}

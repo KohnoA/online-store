@@ -1,9 +1,6 @@
-import './styles/style.css';
-import image from './assets/images/gorila.jpg';
+import './styles/index.scss';
+import { createPageHeader } from './components/header/header';
+import { createFooter } from './components/footer/footer';
 
-// const image = require('./assets/images/gorila.jpg');
-// console.log(image);
-
-const img = document.querySelector('.logo img') as HTMLImageElement;
-
-img.src = image;
+createPageHeader();
+createFooter();
