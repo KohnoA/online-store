@@ -1,22 +1,23 @@
 import './header.scss';
 
-const body = document.querySelector('.body') as HTMLElement;
-
 export function createPageHeader(): void {
     const header: HTMLElement = document.createElement('header');
     const container: HTMLElement = document.createElement('div');
+    const navigation = createNavigation();
+    const logo = createLogo();
 
     header.classList.add('header');
     container.classList.add('container');
 
+    container.append(logo);
+    container.append(navigation);
     header.append(container);
-    body.append(header);
+    (document.querySelector('.body') as Element).append(header);
 
     createLogo();
-    createNavigation();
 }
 
-function createLogo(): void {
+function createLogo(): HTMLElement {
     const logo: HTMLElement = document.createElement('a');
 
     logo.textContent = 'Online Store';
@@ -24,10 +25,10 @@ function createLogo(): void {
 
     logo.classList.add('logo');
 
-    body.querySelector('.header .container')?.append(logo);
+    return logo;
 }
 
-function createNavigation(): void {
+function createNavigation(): HTMLElement {
     const ul: HTMLElement = document.createElement('ul');
     const liTotalCash: HTMLElement = document.createElement('li');
     const liBasket: Node = liTotalCash.cloneNode(true);
@@ -63,5 +64,6 @@ function createNavigation(): void {
     liTotalCash.append(p);
     ul.append(liTotalCash);
     ul.append(liBasket);
-    body.querySelector('.header .container')?.append(ul);
+
+    return ul;
 }

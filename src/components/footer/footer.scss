@@ -1,0 +1,35 @@
+.footer {
+    background-color: #f5f5f5;
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+
+.rss {
+    padding: 15px;
+    padding-left: 20px;
+    transition: .2s;
+    
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.footer__logo {
+    place-self: center;
+}
+
+.footer__production {
+    place-self: center end;
+    .footer__aqooa, .footer__kohnoa {
+        color: black;
+        transition: .2s;
+
+        &:hover {
+            opacity: .7;
+        }
+    }
+}
