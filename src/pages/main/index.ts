@@ -39,46 +39,53 @@ function createFilters() {
         const li = func.createElement('li', 'aside-list__item', 'product');
         const productsList = createProductsList(item);
 
-        const spanText = func.createElement('span', 'aside-list__text');
+        const div = func.createElement('div', 'product-container');
+
+        const spanText = func.createElement('span', 'product__text');
         spanText.textContent = item;
 
-        li.append(spanText, func.createElement('span', 'aside-list__img', 'aside-list__img_no-active'));
-        ul.append(li, productsList);
+        div.append(spanText, func.createElement('span', 'product__img', 'product__img_no-active'));
+
+        li.append(div, productsList);
+        ul.append(li);
     });
 
     return ul;
 }
 
 function showFilters(e: Event) {
-    const target = e.target as HTMLElement;
+    const target = (e.target as HTMLElement).closest('.product');
 
-    if (!target.closest('.aside-list__item')) return;
+    if (!target) return;
 
-    const li = target.closest('.aside-list__item') as HTMLElement;
-    const span = li.querySelector('.aside-list__img') as HTMLElement;
+    const divContainer = target.querySelector('.product-container') as HTMLElement;
+    const span = divContainer.querySelector('.product__img') as HTMLElement;
 
-    span.classList.toggle('aside-list__img_no-active');
-    span.classList.toggle('aside-list__img_active');
+    span.classList.toggle('product__img_no-active');
+    span.classList.toggle('product__img_active');
+
+    const form = target.querySelector('.product-form') as HTMLElement;
+    form.classList.toggle('product-form_hidden');
 }
 
 function createProductsList(category: string) {
-    const ul = func.createElement('ul', 'product-list');
+    const form = func.createElement('form', 'product-form', 'product-form_hidden');
     const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase());
 
     categoryArr.forEach((product) => {
-        const li = func.createElement('li', 'product-list__item');
+        const label = func.createElement('label', 'product-form__item');
 
-        const checkbox = func.createElement('input', 'product-list__checkbox') as HTMLInputElement;
+        const checkbox = func.createElement('input', 'product-form__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
 
-        const span = func.createElement('span', 'product-list__text');
+        const span = func.createElement('span', 'product-form__text');
         span.textContent = product;
 
-        li.append(checkbox, span);
-        ul.append(li);
+        label.append(checkbox, span);
+        form.append(label);
     });
 
-    return ul;
+    return form;
 }
 
 function createArrOfProducts(products: Products[], category: string): Set<string> {
