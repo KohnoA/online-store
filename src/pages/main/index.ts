@@ -4,6 +4,7 @@ import { createCatalog } from './catalog/catalog';
 import './main.scss';
 
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
+const maxLengthToShow = 7;
 
 export function createMain(): void {
     const main = func.createElement('main', 'main');
@@ -54,50 +55,63 @@ function createFilters() {
 }
 
 function showFilters(e: Event) {
-    const target = (e.target as HTMLElement).closest('.product');
+    const target = e.target as HTMLElement;
 
-    if (!target) return;
+    if (target.closest('.product-form')) setUrlHash(e);
 
-    const divContainer = target.querySelector('.product-container') as HTMLElement;
-    const span = divContainer.querySelector('.product__img') as HTMLElement;
+    if (!target.closest('.product-container')) return;
+
+    const currentTarget = target.closest('.product') as HTMLDivElement;
+    const span = currentTarget.querySelector('.product__img') as HTMLElement;
 
     span.classList.toggle('product__img_no-active');
     span.classList.toggle('product__img_active');
 
-    const form = target.querySelector('.product-form') as HTMLElement;
+    const form = currentTarget.querySelector('.product-form') as HTMLElement;
     form.classList.toggle('product-form_hidden');
 }
 
 function createProductsList(category: string) {
     const form = func.createElement('form', 'product-form', 'product-form_hidden');
-    const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase());
+    const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase(), maxLengthToShow);
 
     categoryArr.forEach((product) => {
-        const label = func.createElement('label', 'product-form__item');
+        const label = func.createElement('label', 'product-form__label');
 
         const checkbox = func.createElement('input', 'product-form__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
 
-        const span = func.createElement('span', 'product-form__text');
-        span.textContent = product;
+        const a = func.createElement('a', 'product-form__hash');
+        a.setAttribute('href', `${product}`);
+        a.textContent = product;
 
-        label.append(checkbox, span);
+        label.append(checkbox, a);
         form.append(label);
     });
 
     return form;
 }
 
-function createArrOfProducts(products: Products[], category: string): Set<string> {
+function createArrOfProducts(products: Products[], category: string, length?: number): Set<string> {
     const set: Set<string> = new Set();
 
     products.forEach((product) => {
         if (typeof product[category] === 'string') {
-            set.add(product[category]);
+            if (length && set.size < length) {
+                set.add(product[category]);
+            } else return;
         }
     });
 
     return set;
+}
+
+function setUrlHash(e: Event) {
+    const currentTarget = (e.target as HTMLElement).closest('.product-form__label');
+    const a = currentTarget?.querySelector('.product-form__hash') as HTMLLinkElement;
+    const hash = a.getAttribute('href') as string;
+    window.location.hash = hash;
+    return hash;
 }
 
 interface Products {

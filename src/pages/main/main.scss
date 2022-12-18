@@ -66,16 +66,28 @@
     }
 }
 
-.product-form {
-    max-height: 226px;
-    overflow: hidden;
-    overflow-y: auto;
+.product {
+
+    .product-form {
+        max-height: 226px;
+        overflow: hidden;
+        overflow-y: auto;
+    }
 }
 
-.product-form__item {
+.product-form__label {
     width: 100%;
     display: block;
+    cursor: pointer;
 
+    .product-form__checkbox {
+
+    }
+
+    .product-form__hash {
+        position: relative;
+        z-index: -1;
+    }
 }
 
 /*  Add Classes  */
