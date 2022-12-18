@@ -1,5 +1,6 @@
 //import products from '../../constants/products.json';
 import * as func from '../../utils/index';
+import { createCatalog } from './catalog/catalog';
 import './main.scss';
 
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
@@ -45,14 +46,6 @@ function createFilters() {
     });
 
     return ul;
-}
-
-function createCatalog() {
-    const article = func.createElement('article', 'article');
-    const h1 = func.createElement('h1', 'main__title');
-    h1.textContent = 'Catalog';
-    article.append(h1);
-    return article;
 }
 
 function showFilters(e: Event) {
