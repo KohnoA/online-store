@@ -9,77 +9,74 @@ const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
-  context: path.resolve(__dirname, './src'),
-  mode: 'development',
-  entry: './index',
-  output: {
-    filename: '[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  resolve: {
-    extensions: ['.js', '.ts'],
-  },
-  devServer: {
-    port: 4200,
-    hot: isDev,
-  },
-  devtool: isDev ? 'source-map' : false,
-  optimization: {
-    minimizer: [
-        '...',
-        new CssMinimizerWebpackPlugin()
-    ]
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './index.html',
-    }),
-    new CleanWebpackPlugin(),
-    // new CopyWebpackPlugin({                  //Copy plugin, maybe wold be useful in future
-    //   patterns: [{
-    //     from: path.resolve(__dirname, './src/assets/images/fromHtml'),
-    //     to: path.resolve(__dirname, './dist/images'),
-    //   }],
-    // }),
-    new MiniCssExtractPlugin({
-      filename: '[contenthash].css',
-    }),
-    new EslintPlugin({ 
-      extensions: 'ts' 
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {},
-          },
-          "css-loader",
-        ],
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {},
-          },
-          "css-loader",
-          "sass-loader",
-        ],
-      },
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.(ttf|woff|woff2|png|jpe?g|gif|svg)$/i,
-        type: 'asset/resource',
-      },
+    context: path.resolve(__dirname, './src'),
+    mode: 'development',
+    entry: './index',
+    output: {
+        filename: '[contenthash].js',
+        path: path.resolve(__dirname, 'dist'),
+    },
+    resolve: {
+        extensions: ['.js', '.ts'],
+    },
+    devServer: {
+        port: 4200,
+        hot: isDev,
+    },
+    devtool: isDev ? 'source-map' : false,
+    optimization: {
+        minimizer: ['...', new CssMinimizerWebpackPlugin()],
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './index.html',
+        }),
+        new CleanWebpackPlugin(),
+        // new CopyWebpackPlugin({                  //Copy plugin, maybe wold be useful in future
+        //   patterns: [{
+        //     from: path.resolve(__dirname, './src/assets/images/fromHtml'),
+        //     to: path.resolve(__dirname, './dist/images'),
+        //   }],
+        // }),
+        new MiniCssExtractPlugin({
+            filename: '[contenthash].css',
+        }),
+        new EslintPlugin({
+            extensions: 'ts',
+        }),
     ],
-  },
-}
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {},
+                    },
+                    'css-loader',
+                ],
+            },
+            {
+                test: /\.s[ac]ss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {},
+                    },
+                    'css-loader',
+                    'sass-loader',
+                ],
+            },
+            {
+                test: /\.ts$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.(ttf|woff|woff2|png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+        ],
+    },
+};
