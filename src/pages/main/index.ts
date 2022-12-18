@@ -36,7 +36,7 @@ function createFilters() {
 
     asideBar.forEach((item) => {
         const li = func.createElement('li', 'aside-list__item', 'product');
-        const productsList = createProductsList();
+        const productsList = createProductsList(item);
 
         const spanText = func.createElement('span', 'aside-list__text');
         spanText.textContent = item;
@@ -68,18 +68,18 @@ function showFilters(e: Event) {
     span.classList.toggle('aside-list__img_active');
 }
 
-function createProductsList() {
+function createProductsList(category: string) {
     const ul = func.createElement('ul', 'product-list');
-    const productsArr = createArrOfProducts(productsJson.products, asideBar);
+    const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase());
 
-    productsArr.forEach((product) => {
+    categoryArr.forEach((product) => {
         const li = func.createElement('li', 'product-list__item');
-        console.log(product);
+
         const checkbox = func.createElement('input', 'product-list__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
 
         const span = func.createElement('span', 'product-list__text');
-        // span.textContent = product;
+        span.textContent = product;
 
         li.append(checkbox, span);
         ul.append(li);
@@ -88,22 +88,16 @@ function createProductsList() {
     return ul;
 }
 
-function createArrOfProducts(products: Products[], categories: string[]) {
-    const arr: Array<Set<string>> = [];
+function createArrOfProducts(products: Products[], category: string): Set<string> {
+    const set: Set<string> = new Set();
 
-    categories.forEach((category) => {
-        const currentCategory = category.toLowerCase();
-        const set: Set<string> = new Set();
-
-        products.forEach((product) => {
-            if (typeof product[currentCategory] === 'string') {
-                set.add(product[currentCategory]);
-            }
-        });
-
-        set.size ? arr.push(set) : false;
+    products.forEach((product) => {
+        if (typeof product[category] === 'string') {
+            set.add(product[category]);
+        }
     });
-    return arr;
+
+    return set;
 }
 
 interface Products {
