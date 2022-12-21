@@ -56,7 +56,7 @@ function createSortSelection(): HTMLElement {
         sortSelection.append(option);
     });
 
-    sortDescription.textContent = 'sort by ';
+    sortDescription.textContent = 'Sort by ';
 
     container.append(sortDescription);
     container.append(sortSelection);
@@ -102,7 +102,7 @@ function createSelectGrid(): HTMLElement {
         gridSelection.append(option);
     });
 
-    gridDescription.textContent = 'show by ';
+    gridDescription.textContent = 'Show by ';
 
     container.append(gridDescription);
     container.append(gridSelection);
