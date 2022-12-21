@@ -1,6 +1,7 @@
 import productsJson from '../../constants/products.json';
 import * as func from '../../utils/index';
 import { createCatalog } from './catalog/catalog';
+import { Product } from 'constants/types/types';
 import './main.scss';
 
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
@@ -90,7 +91,7 @@ function createProductsList(category: string) {
     return form;
 }
 
-function createArrOfProducts(products: Products[], category: string, length?: number): Set<string> {
+function createArrOfProducts(products: Product[], category: string, length?: number): Set<string> {
     const set: Set<string> = new Set();
 
     products.forEach((product) => {
@@ -110,18 +111,4 @@ function setUrlHash(e: Event) {
     const hash = a.getAttribute('href') as string;
     window.location.hash = hash;
     return hash;
-}
-
-interface Products {
-    brand: string;
-    category: string;
-    description: string;
-    discountPercentage: string;
-    id: number;
-    images: string[];
-    price: number;
-    rating: number;
-    stock: number;
-    thumbnail: string;
-    title: string;
 }

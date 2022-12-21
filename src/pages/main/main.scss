@@ -8,7 +8,8 @@
 }
 
 .aside {
-    width: 25%;
+    width: 20%;
+    flex-shrink: 0;
 }
 
 .aside__title {
@@ -80,9 +81,9 @@
     display: block;
     cursor: pointer;
 
-    .product-form__checkbox {
+    // .product-form__checkbox {
 
-    }
+    // }
 
     .product-form__hash {
         position: relative;

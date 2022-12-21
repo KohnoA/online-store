@@ -36,6 +36,7 @@ function createSortSelection(): HTMLElement {
     const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection');
     const sortDescription = utils.createElement('span', 'catalog__sort-description');
 
+    //можно вынести в константы
     const sortValues: Array<string> = [
         'default',
         'price ASC',
@@ -89,6 +90,7 @@ function createSelectGrid(): HTMLElement {
     const gridDescription = utils.createElement('span', 'catalog__grid-Description');
     const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection');
 
+    //можно вынести в константы
     const gridValues: Array<string> = ['4', '5'];
 
     gridValues.forEach((item) => {

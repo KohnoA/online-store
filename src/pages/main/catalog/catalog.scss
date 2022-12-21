@@ -1,5 +1,6 @@
 .catalog {
     flex-grow: 1;
+    margin-bottom: 40px; //потом убрать
 }
 
 .catalog__title {
@@ -31,7 +32,7 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     border-bottom: 1px solid #ccc;
 }
 
@@ -48,4 +49,55 @@
 
 .catalog__search-product {
     max-width: 110px;
+}
+
+.catalog__main {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 35vh;
+    grid-column-gap: 20px;
+    grid-row-gap: 7vh;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: .2s;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    }
+}
+
+.product__image {
+    object-fit: cover;
+    max-width: 100%;
+    height: 65%;
+    transition: .2s;
+}
+
+.product__title {
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.product__button {
+    width: 100%;
+    height: 13%;
+    text-transform: uppercase;
+    color: white;
+    background-color: black;
+    border-radius: 2px;
+    transition: .2s;
+
+    &:hover {
+        color: black;
+        background-color: #ccc;
+    }
 }
