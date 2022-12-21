@@ -5,13 +5,14 @@ export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
     const h1 = utils.createElement('h1', 'catalog__title');
     const catalogHeader = createCatalogHeader();
-    const catalogContainder = utils.createElement('div', 'catalog__main');
+    const catalogEpmty = utils.createElement('div', 'catalog__main', 'catalog__main_empty');
 
     h1.textContent = 'Catalog';
+    catalogEpmty.textContent = 'Loading products...';
 
     catalog.append(h1);
     catalog.append(catalogHeader);
-    catalog.append(catalogContainder);
+    catalog.append(catalogEpmty);
 
     return catalog;
 }

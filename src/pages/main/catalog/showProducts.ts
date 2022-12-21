@@ -1,14 +1,20 @@
 import products from '../../../constants/products.json';
 import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
+import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 
 export function showProductsList(): void {
-    const catalogMain = document.querySelector('.catalog__main');
+    const catalogMainFull = utils.createElement('div', 'catalog__main');
+    const catalogMainEmpty = document.querySelector('.catalog__main');
     const productList: Array<Product> = products.products;
 
-    productList.forEach((item) => {
-        catalogMain?.append(createProductCard(item));
-    });
+    for (const item of productList) {
+        const productNode = createProductCard(item);
+
+        catalogMainFull.append(productNode);
+    }
+
+    catalogMainEmpty?.replaceWith(catalogMainFull);
 }
 
 function createProductCard(item: Product): HTMLElement {
@@ -16,8 +22,17 @@ function createProductCard(item: Product): HTMLElement {
     const productImage = utils.createElement('img', 'product__image') as HTMLImageElement;
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
+    const urlImage: string = item.thumbnail;
+    // const response: Response = await fetch(urlImage);
 
-    productImage.src = item.thumbnail;
+    productImage.src = defaultProductImage;
+
+    fetch(urlImage)
+        .then((res) => {
+            productImage.src = res.url;
+        })
+        .catch((err) => console.log(err));
+
     productImage.setAttribute('alt', item.title);
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
