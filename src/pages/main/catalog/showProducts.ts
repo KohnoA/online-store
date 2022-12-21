@@ -29,10 +29,6 @@ function createProductCard(item: Product): HTMLElement {
         productImage.src = urlImage;
     };
 
-    productImage.onerror = () => {
-        productImage.src = defaultProductImage;
-    };
-
     productImage.setAttribute('alt', item.title);
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
