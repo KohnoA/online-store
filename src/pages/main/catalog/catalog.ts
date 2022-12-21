@@ -5,14 +5,13 @@ export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
     const h1 = utils.createElement('h1', 'catalog__title');
     const catalogHeader = createCatalogHeader();
-    const catalogEpmty = utils.createElement('div', 'catalog__main', 'catalog__main_empty');
+    const catalogMain = utils.createElement('div', 'catalog__main');
 
     h1.textContent = 'Catalog';
-    catalogEpmty.textContent = 'Loading products...';
 
     catalog.append(h1);
     catalog.append(catalogHeader);
-    catalog.append(catalogEpmty);
+    catalog.append(catalogMain);
 
     return catalog;
 }
@@ -92,7 +91,7 @@ function createSelectGrid(): HTMLElement {
     const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection');
 
     //можно вынести в константы
-    const gridValues: Array<string> = ['4', '5'];
+    const gridValues: Array<string> = ['3', '4'];
 
     gridValues.forEach((item) => {
         const option = document.createElement('option');
