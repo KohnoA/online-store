@@ -25,17 +25,21 @@ module.exports = {
     },
     devtool: isDev ? 'source-map' : false,
     optimization: {
-        minimizer: ['...', new CssMinimizerWebpackPlugin()],
+        minimizer: [
+            '...',
+            new CssMinimizerWebpackPlugin()
+        ],
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: './index.html',
+            favicon: './assets/favicon.ico',
         }),
         new CleanWebpackPlugin(),
-        // new CopyWebpackPlugin({                  //Copy plugin, maybe wold be useful in future
+        // new CopyWebpackPlugin({
         //   patterns: [{
-        //     from: path.resolve(__dirname, './src/assets/images/fromHtml'),
-        //     to: path.resolve(__dirname, './dist/images'),
+        //     from: path.resolve(__dirname, './src/assets/favicon.ico'),
+        //     to: path.resolve(__dirname, './dist'),
         //   }],
         // }),
         new MiniCssExtractPlugin({
