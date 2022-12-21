@@ -39,6 +39,7 @@
     font-family: inherit;
     opacity: .7;
     transition: .2s;
+    cursor: pointer;
 
     &:hover {
         opacity: 1;
@@ -48,8 +49,3 @@
 .catalog__search-product {
     max-width: 110px;
 }
-
-// .catalog__main {
-//     background-color: black;
-//     height: 40px;
-// }

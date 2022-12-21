@@ -6,16 +6,14 @@ import './main.scss';
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
 const maxLengthToShow = 7;
 
-export function createMain(): void {
-    const main = func.createElement('main', 'main');
+export function createFilterPage() {
     const container = func.createElement('container', 'main-container', 'container');
 
     const aside = createAsideBar();
     const article = createCatalog();
 
     container.append(aside, article);
-    main.append(container);
-    document.body.append(main);
+    document.querySelector('.main')?.append(container);
 }
 
 function createAsideBar() {

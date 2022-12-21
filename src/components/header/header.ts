@@ -1,8 +1,8 @@
 import './header.scss';
 
-export function createPageHeader(): void {
-    const header: HTMLElement = document.createElement('header');
-    const container: HTMLElement = document.createElement('div');
+export function createPageHeader(): HTMLElement {
+    const header = document.createElement('header');
+    const container = document.createElement('div');
     const navigation = createNavigation();
     const logo = createLogo();
 
@@ -12,13 +12,13 @@ export function createPageHeader(): void {
     container.append(logo);
     container.append(navigation);
     header.append(container);
-    (document.querySelector('.body') as Element).append(header);
-
     createLogo();
+
+    return header;
 }
 
 function createLogo(): HTMLElement {
-    const logo: HTMLElement = document.createElement('a');
+    const logo = document.createElement('a');
 
     logo.textContent = 'Online Store';
     logo.setAttribute('href', '#');
@@ -29,14 +29,14 @@ function createLogo(): HTMLElement {
 }
 
 function createNavigation(): HTMLElement {
-    const ul: HTMLElement = document.createElement('ul');
-    const liTotalCash: HTMLElement = document.createElement('li');
+    const ul = document.createElement('ul');
+    const liTotalCash = document.createElement('li');
     const liBasket: Node = liTotalCash.cloneNode(true);
-    const p: HTMLElement = document.createElement('p');
-    const a: HTMLElement = document.createElement('a');
-    const span: HTMLElement = document.createElement('span');
-    const basketImage: HTMLElement = document.createElement('span');
-    const basketCount: HTMLElement = document.createElement('span');
+    const p = document.createElement('p');
+    const a = document.createElement('a');
+    const span = document.createElement('span');
+    const basketImage = document.createElement('span');
+    const basketCount = document.createElement('span');
 
     ul.classList.add('navigaion');
     liTotalCash.classList.add('navigaion__item');
