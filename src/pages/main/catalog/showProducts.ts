@@ -4,7 +4,7 @@ import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 
 //этой функции можно добавить аргумент фильтра
-export function showProductsList(): void {
+export async function showProductsList(): Promise<void> {
     const catalogMain = document.querySelector('.catalog__main');
     const productList: Array<Product> = products.products;
 
@@ -17,19 +17,24 @@ export function showProductsList(): void {
 
 function createProductCard(item: Product): HTMLElement {
     const productItem = utils.createElement('div', 'product');
-    const productImage = utils.createElement('img', 'product__image') as HTMLImageElement;
+    const productImage = utils.createElement('div', 'product__image');
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
     const productPrice = utils.createElement('span', 'product__price');
-    const urlImage: string = item.thumbnail;
+    const img = new Image();
+    const urlImage = item.thumbnail;
 
-    productImage.src = defaultProductImage;
+    productImage.style.backgroundImage = `url('${defaultProductImage}')`;
 
-    productImage.onload = () => {
-        productImage.src = urlImage;
+    img.src = urlImage;
+    img.onload = () => {
+        productImage.style.backgroundImage = `url('${img.src}')`;
     };
 
-    productImage.setAttribute('alt', item.title);
+    img.onerror = () => {
+        productImage.style.backgroundImage = `url('${defaultProductImage}')`;
+    };
+
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
     productTitle.textContent = item.title;
