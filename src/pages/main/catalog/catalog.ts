@@ -66,6 +66,8 @@ function createSearchProduct(): HTMLElement {
     input.setAttribute('placeholder', 'Search product');
     input.setAttribute('type', 'text');
 
+    input.addEventListener('input', catalogSearchEvent);
+
     return input;
 }
 
@@ -101,4 +103,12 @@ function setGridSelection(event: Event): void {
             catalogMain.classList.remove('catalog__main_three-columns');
         }
     }
+}
+
+//сортировка по введеному названию
+function catalogSearchEvent(event: Event) {
+    const input: EventTarget | null = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+
+    console.log(input.value);
 }

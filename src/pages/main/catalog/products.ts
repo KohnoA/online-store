@@ -22,6 +22,8 @@ function createProductCard(item: Product): HTMLElement {
     const productImage = utils.createElement('div', 'product__image');
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
+    const productDiscountNode = utils.createElement('div', 'product__discount');
+    const roundedDiscount = Math.round(item.discountPercentage);
     const productPrice = createProductPrice(item.price, item.discountPercentage);
 
     setProductImage(productImage, item.thumbnail);
@@ -29,11 +31,13 @@ function createProductCard(item: Product): HTMLElement {
     productButton.setAttribute('type', 'button');
     productItem.setAttribute('href', `product-details/${item.id}`);
     productTitle.textContent = item.title;
+    productDiscountNode.textContent = `-${roundedDiscount}%`;
 
     productItem.append(productImage);
     productItem.append(productTitle);
     productItem.append(productPrice);
     productItem.append(productButton);
+    productItem.append(productDiscountNode);
 
     productButton.addEventListener('click', productButtonEvent);
 
@@ -44,18 +48,14 @@ function createProductPrice(price: number, discount: number): HTMLElement {
     const productPrice = utils.createElement('p', 'product__price');
     const productCurrentPrice = utils.createElement('span', 'product__current-price');
     const productPriceWithoutDiscount = utils.createElement('span', 'product__price-without-discount');
-    // const productDiscountNode = utils.createElement('span', 'product__discount');
     const priceWithoutDiscount = price + Math.round((price / 100) * discount);
-    // const roundedDiscount = Math.round(discount);
 
     productCurrentPrice.textContent = `${price}€`;
     productPriceWithoutDiscount.textContent = `${priceWithoutDiscount}€`;
-    // productDiscountNode.textContent = `-${roundedDiscount}%`;
 
     productPrice.append(productCurrentPrice);
     productPrice.append(' / ');
     productPrice.append(productPriceWithoutDiscount);
-    // productPrice.append(productDiscountNode);
 
     return productPrice;
 }
