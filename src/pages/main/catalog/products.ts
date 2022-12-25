@@ -2,9 +2,7 @@ import products from '../../../constants/products.json';
 import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
-
-//Можно перенести в коснтанты
-export const cartArray: Array<Product> = [];
+import { cartArray } from '../../../constants/data/data';
 
 export function showProductsList(): void {
     const catalogMain = document.querySelector('.catalog__main');

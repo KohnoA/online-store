@@ -9,3 +9,14 @@ export function createElement(element: string, className: string, anotherClass?:
 
     return elem;
 }
+
+export function createSelectOptions(arrValues: Array<string>, instert: HTMLElement): void {
+    arrValues.forEach((item) => {
+        const option = document.createElement('option');
+
+        option.setAttribute('value', item);
+        option.textContent = item;
+
+        instert.append(option);
+    });
+}
