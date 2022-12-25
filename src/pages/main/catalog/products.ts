@@ -13,6 +13,8 @@ export function showProductsList(): void {
 
         catalogMain?.append(productNode);
     }
+
+    numberOfProductsInCatalog();
 }
 
 function createProductCard(item: Product): HTMLElement {
@@ -20,14 +22,13 @@ function createProductCard(item: Product): HTMLElement {
     const productImage = utils.createElement('div', 'product__image');
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
-    const productPrice = utils.createElement('span', 'product__price');
+    const productPrice = createProductPrice(item.price, item.discountPercentage);
 
     setProductImage(productImage, item.thumbnail);
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
     productItem.setAttribute('href', `product-details/${item.id}`);
     productTitle.textContent = item.title;
-    productPrice.textContent = `${item.price}€`;
 
     productItem.append(productImage);
     productItem.append(productTitle);
@@ -37,6 +38,26 @@ function createProductCard(item: Product): HTMLElement {
     productButton.addEventListener('click', productButtonEvent);
 
     return productItem;
+}
+
+function createProductPrice(price: number, discount: number): HTMLElement {
+    const productPrice = utils.createElement('p', 'product__price');
+    const productCurrentPrice = utils.createElement('span', 'product__current-price');
+    const productPriceWithoutDiscount = utils.createElement('span', 'product__price-without-discount');
+    // const productDiscountNode = utils.createElement('span', 'product__discount');
+    const priceWithoutDiscount = price + Math.round((price / 100) * discount);
+    // const roundedDiscount = Math.round(discount);
+
+    productCurrentPrice.textContent = `${price}€`;
+    productPriceWithoutDiscount.textContent = `${priceWithoutDiscount}€`;
+    // productDiscountNode.textContent = `-${roundedDiscount}%`;
+
+    productPrice.append(productCurrentPrice);
+    productPrice.append(' / ');
+    productPrice.append(productPriceWithoutDiscount);
+    // productPrice.append(productDiscountNode);
+
+    return productPrice;
 }
 
 function setProductImage(product: HTMLElement, url: string): void {
@@ -58,14 +79,16 @@ function productButtonEvent(event: Event): void {
     const target: EventTarget | null = event.target;
     if (!(target instanceof HTMLElement)) return;
 
+    const targetProductTitle = target.parentElement?.querySelector('.product__title')?.textContent;
+    const targetProductPrice = target.parentElement
+        ?.querySelector('.product__current-price')
+        ?.textContent?.slice(0, -1) as string;
+    const productList: Array<Product> = products.products;
+    const addProduct = productList.find((item) => item.title === targetProductTitle);
+
     target.classList.toggle('product__button_active');
     target.textContent = 'In Cart';
     target.setAttribute('disabled', '');
-
-    const targetProductTitle = target.parentElement?.querySelector('.product__title')?.textContent;
-    const targetProductPrice = target.previousElementSibling?.textContent?.slice(0, -1) as string;
-    const productList: Array<Product> = products.products;
-    const addProduct = productList.find((item) => item.title === targetProductTitle);
 
     if (addProduct) cartArray.push(addProduct);
 
@@ -82,4 +105,11 @@ export function setCashAndCartItems(addCash: string): void {
     (document.getElementById('count-purchases') as HTMLElement).textContent = String(cartArray.length);
 
     totalCashNode.textContent = String(result);
+}
+
+export function numberOfProductsInCatalog(): void {
+    const foundProducts = document.querySelector('.catalog__products-int') as HTMLElement;
+    const numberOfProducts = document.querySelectorAll('.catalog .product').length;
+
+    foundProducts.textContent = String(numberOfProducts);
 }
