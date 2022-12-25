@@ -5,7 +5,7 @@ export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
     const h1 = utils.createElement('h1', 'catalog__title');
     const catalogHeader = createCatalogHeader();
-    const catalogMain = utils.createElement('div', 'catalog__main');
+    const catalogMain = utils.createElement('div', 'catalog__main', 'catalog__main_three-columns');
 
     h1.textContent = 'Catalog';
 

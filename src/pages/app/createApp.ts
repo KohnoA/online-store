@@ -1,6 +1,6 @@
-import * as utils from '../utils/index';
-import { createPageHeader } from './header/header';
-import { createFooter } from './footer/footer';
+import * as utils from '../../utils/index';
+import { createPageHeader } from '../../components/header/header';
+import { createFooter } from '../../components/footer/footer';
 
 export function createApp(): void {
     const body = document.querySelector('.body') as HTMLElement;

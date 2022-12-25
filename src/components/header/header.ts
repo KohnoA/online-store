@@ -21,7 +21,7 @@ function createLogo(): HTMLElement {
     const logo = document.createElement('a');
 
     logo.textContent = 'Online Store';
-    logo.setAttribute('href', '#');
+    logo.setAttribute('href', '/');
 
     logo.classList.add('logo');
 
@@ -50,7 +50,7 @@ function createNavigation(): HTMLElement {
     p.textContent = '€';
     span.textContent = '0';
     basketCount.textContent = '0';
-    a.setAttribute('href', '#');
+    a.setAttribute('href', 'cart');
 
     a.append(basketImage);
     a.append(basketCount);
