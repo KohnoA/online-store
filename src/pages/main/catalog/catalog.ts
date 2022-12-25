@@ -1,6 +1,7 @@
 import * as utils from '../../../utils/index';
 import './catalog.scss';
 import { sortValues, gridValues } from '../../../constants/data/data';
+import { showProductsList } from './products';
 
 export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
@@ -110,5 +111,6 @@ function catalogSearchEvent(event: Event) {
     const input: EventTarget | null = event.target;
     if (!(input instanceof HTMLInputElement)) return;
 
+    showProductsList(input.value);
     console.log(input.value);
 }

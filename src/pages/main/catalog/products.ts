@@ -4,12 +4,28 @@ import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { cartArray } from '../../../constants/data/data';
 
-export function showProductsList(): void {
-    const catalogMain = document.querySelector('.catalog__main');
-    const productList: Array<Product> = products.products;
+export function showProductsList(inputValue?: string): void {
+    const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
+    let productList: Array<Product> = products.products;
+
+    catalogMain.innerHTML = '';
+
+    if (inputValue) {
+        productList = productList.filter((item) => {
+            const productTitle = item.title.toLowerCase();
+            const value = inputValue.toLowerCase();
+
+            return productTitle.startsWith(value);
+        });
+    }
 
     for (const item of productList) {
         const productNode = createProductCard(item);
+
+        if (cartArray.includes(item)) {
+            const productButton = productNode.querySelector('.product__button') as HTMLElement;
+            setButtonInCart(productButton);
+        }
 
         catalogMain?.append(productNode);
     }
@@ -86,12 +102,9 @@ function productButtonEvent(event: Event): void {
     const productList: Array<Product> = products.products;
     const addProduct = productList.find((item) => item.title === targetProductTitle);
 
-    target.classList.toggle('product__button_active');
-    target.textContent = 'In Cart';
-    target.setAttribute('disabled', '');
-
     if (addProduct) cartArray.push(addProduct);
 
+    setButtonInCart(target);
     setCashAndCartItems(targetProductPrice);
 
     event.preventDefault();
@@ -99,10 +112,11 @@ function productButtonEvent(event: Event): void {
 
 export function setCashAndCartItems(addCash: string): void {
     const totalCashNode = document.getElementById('total-cash') as HTMLElement;
+    const cartItems = document.getElementById('count-purchases') as HTMLElement;
     const currentTotalCash = totalCashNode.textContent as string;
     const result = +currentTotalCash + +addCash;
 
-    (document.getElementById('count-purchases') as HTMLElement).textContent = String(cartArray.length);
+    cartItems.textContent = String(cartArray.length);
 
     totalCashNode.textContent = String(result);
 }
@@ -112,4 +126,10 @@ export function numberOfProductsInCatalog(): void {
     const numberOfProducts = document.querySelectorAll('.catalog .product').length;
 
     foundProducts.textContent = String(numberOfProducts);
+}
+
+function setButtonInCart(element: HTMLElement): void {
+    element.classList.toggle('product__button_active');
+    element.textContent = 'In Cart';
+    element.setAttribute('disabled', '');
 }
