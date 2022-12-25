@@ -107,5 +107,24 @@ function createSelectGrid(): HTMLElement {
     container.append(gridDescription);
     container.append(gridSelection);
 
+    gridSelection.addEventListener('change', setGridSelection);
+
     return container;
+}
+
+function setGridSelection(event: Event): void {
+    const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
+    const select = event.target;
+
+    if (select && select instanceof HTMLSelectElement) {
+        const currentValue = select.selectedIndex;
+
+        if (currentValue === 0) {
+            catalogMain.classList.remove('catalog__main_four-columns');
+            catalogMain.classList.add('catalog__main_three-columns');
+        } else if (currentValue === 1) {
+            catalogMain.classList.add('catalog__main_four-columns');
+            catalogMain.classList.remove('catalog__main_three-columns');
+        }
+    }
 }

@@ -3,6 +3,7 @@ import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 
+//Можно перенести в коснтанты
 export const cartArray: Array<Product> = [];
 
 export function showProductsList(): void {
