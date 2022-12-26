@@ -1,0 +1,12 @@
+.page-not-found {
+    text-align: center;
+    .page-not-found__code {
+        margin-bottom: 15px;
+        font-size: 3rem;
+        font-weight: 700;
+    }
+    .page-not-found__description {
+        text-transform: uppercase;
+        font-size: 2rem;
+    }
+}
