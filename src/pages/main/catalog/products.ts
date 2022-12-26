@@ -2,11 +2,13 @@ import products from '../../../constants/products.json';
 import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
+import { sortValues } from '../../../constants/data/data';
 import { cartArray } from '../../../constants/data/data';
 
-export function showProductsList(inputValue?: string): void {
+export function showProductsList(inputValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
-    let productList: Array<Product> = products.products;
+    const noProductsFound = utils.createElement('p', 'catalog__not-found');
+    let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
 
@@ -19,15 +21,22 @@ export function showProductsList(inputValue?: string): void {
         });
     }
 
-    for (const item of productList) {
-        const productNode = createProductCard(item);
+    if (sortBy && sortBy !== 'default') productList = sortProductsArray(productList, sortBy);
 
-        if (cartArray.includes(item)) {
-            const productButton = productNode.querySelector('.product__button') as HTMLElement;
-            setButtonInCart(productButton);
-        }
+    if (productList.length === 0) {
+        noProductsFound.textContent = 'No products found :(';
+        catalogMain.append(noProductsFound);
+    } else {
+        productList.forEach((item) => {
+            const productNode = createProductCard(item);
 
-        catalogMain?.append(productNode);
+            if (cartArray.includes(item)) {
+                const productButton = productNode.querySelector('.product__button') as HTMLElement;
+                setButtonInCart(productButton);
+            }
+
+            catalogMain?.append(productNode);
+        });
     }
 
     numberOfProductsInCatalog();
@@ -117,7 +126,6 @@ export function setCashAndCartItems(addCash: string): void {
     const result = +currentTotalCash + +addCash;
 
     cartItems.textContent = String(cartArray.length);
-
     totalCashNode.textContent = String(result);
 }
 
@@ -132,4 +140,15 @@ function setButtonInCart(element: HTMLElement): void {
     element.classList.toggle('product__button_active');
     element.textContent = 'In Cart';
     element.setAttribute('disabled', '');
+}
+
+function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Product> {
+    if (sortBy === sortValues[1]) originArr.sort((a, b) => a.price - b.price);
+    else if (sortBy === sortValues[2]) originArr.sort((a, b) => b.price - a.price);
+    else if (sortBy === sortValues[3]) originArr.sort((a, b) => a.rating - b.rating);
+    else if (sortBy === sortValues[4]) originArr.sort((a, b) => b.rating - a.rating);
+    else if (sortBy === sortValues[5]) originArr.sort((a, b) => a.discountPercentage - b.discountPercentage);
+    else if (sortBy === sortValues[6]) originArr.sort((a, b) => b.discountPercentage - a.discountPercentage);
+
+    return originArr;
 }

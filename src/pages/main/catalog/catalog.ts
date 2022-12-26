@@ -1,5 +1,5 @@
-import * as utils from '../../../utils/index';
 import './catalog.scss';
+import * as utils from '../../../utils/index';
 import { sortValues, gridValues } from '../../../constants/data/data';
 import { showProductsList } from './products';
 
@@ -42,6 +42,8 @@ function createSortSelection(): HTMLElement {
 
     sortDescription.textContent = 'Sort by ';
 
+    sortSelection.addEventListener('change', catalogHeaderEvents);
+
     container.append(sortDescription);
     container.append(sortSelection);
 
@@ -67,7 +69,7 @@ function createSearchProduct(): HTMLElement {
     input.setAttribute('placeholder', 'Search product');
     input.setAttribute('type', 'text');
 
-    input.addEventListener('input', catalogSearchEvent);
+    input.addEventListener('input', catalogHeaderEvents);
 
     return input;
 }
@@ -106,11 +108,9 @@ function setGridSelection(event: Event): void {
     }
 }
 
-//сортировка по введеному названию
-function catalogSearchEvent(event: Event) {
-    const input: EventTarget | null = event.target;
-    if (!(input instanceof HTMLInputElement)) return;
+function catalogHeaderEvents(): void {
+    const searchInput = document.getElementById('search-product') as HTMLInputElement;
+    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
 
-    showProductsList(input.value);
-    console.log(input.value);
+    showProductsList(searchInput.value, sortValues[selectSortBy.selectedIndex]);
 }

@@ -61,6 +61,10 @@
     grid-auto-rows: 380px;
     grid-column-gap: 40px;
     grid-row-gap: 100px;
+
+    .catalog__not-found {
+        grid-column: 2 / 3;
+    }
 }
 
 .catalog__main_four-columns {
@@ -68,6 +72,16 @@
     grid-auto-rows: 300px;
     grid-column-gap: 30px;
     grid-row-gap: 80px;
+
+    .catalog__not-found {
+        grid-column: 2 / 4;
+    }
+}
+
+.catalog__not-found {
+    place-self: center center;
+    text-transform: uppercase;
+    font-size: 1.1rem;
 }
 
 .product {
