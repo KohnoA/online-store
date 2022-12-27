@@ -1,5 +1,7 @@
-import * as utils from '../../../utils/index';
 import './catalog.scss';
+import * as utils from '../../../utils/index';
+import { sortValues, gridValues } from '../../../constants/data/data';
+import { showProductsList } from './products';
 
 export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
@@ -36,27 +38,11 @@ function createSortSelection(): HTMLElement {
     const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection');
     const sortDescription = utils.createElement('span', 'catalog__sort-description');
 
-    //можно вынести в константы
-    const sortValues: Array<string> = [
-        'default',
-        'price ASC',
-        'price DESC',
-        'rating ASC',
-        'rating DESC',
-        'dicount ASC',
-        'dicount DESC',
-    ];
-
-    sortValues.forEach((item) => {
-        const option = document.createElement('option');
-
-        option.setAttribute('value', item);
-        option.textContent = item;
-
-        sortSelection.append(option);
-    });
+    utils.createSelectOptions(sortValues, sortSelection);
 
     sortDescription.textContent = 'Sort by ';
+
+    sortSelection.addEventListener('change', catalogHeaderEvents);
 
     container.append(sortDescription);
     container.append(sortSelection);
@@ -72,6 +58,7 @@ function createNumberOfProducts(): HTMLElement {
     span.textContent = '0';
 
     p.append(span);
+
     return p;
 }
 
@@ -82,6 +69,8 @@ function createSearchProduct(): HTMLElement {
     input.setAttribute('placeholder', 'Search product');
     input.setAttribute('type', 'text');
 
+    input.addEventListener('input', catalogHeaderEvents);
+
     return input;
 }
 
@@ -90,22 +79,38 @@ function createSelectGrid(): HTMLElement {
     const gridDescription = utils.createElement('span', 'catalog__grid-Description');
     const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection');
 
-    //можно вынести в константы
-    const gridValues: Array<string> = ['3', '4'];
-
-    gridValues.forEach((item) => {
-        const option = document.createElement('option');
-
-        option.setAttribute('value', item);
-        option.textContent = item;
-
-        gridSelection.append(option);
-    });
+    utils.createSelectOptions(gridValues, gridSelection);
 
     gridDescription.textContent = 'Show by ';
 
     container.append(gridDescription);
     container.append(gridSelection);
 
+    gridSelection.addEventListener('change', setGridSelection);
+
     return container;
+}
+
+function setGridSelection(event: Event): void {
+    const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
+    const select = event.target;
+
+    if (select && select instanceof HTMLSelectElement) {
+        const currentValue = select.selectedIndex;
+
+        if (currentValue === 0) {
+            catalogMain.classList.remove('catalog__main_four-columns');
+            catalogMain.classList.add('catalog__main_three-columns');
+        } else if (currentValue === 1) {
+            catalogMain.classList.add('catalog__main_four-columns');
+            catalogMain.classList.remove('catalog__main_three-columns');
+        }
+    }
+}
+
+function catalogHeaderEvents(): void {
+    const searchInput = document.getElementById('search-product') as HTMLInputElement;
+    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
+
+    showProductsList(searchInput.value, sortValues[selectSortBy.selectedIndex]);
 }

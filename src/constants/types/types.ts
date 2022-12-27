@@ -2,7 +2,7 @@ export interface Product {
     brand: string;
     category: string;
     description: string;
-    discountPercentage: string;
+    discountPercentage: number;
     id: number;
     images: string[];
     price: number;
