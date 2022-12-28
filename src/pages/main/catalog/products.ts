@@ -4,22 +4,14 @@ import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
 
-export function showProductsList(inputValue?: string, sortBy?: string): void {
+export function showProductsList(searchValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
     let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
 
-    if (inputValue) {
-        productList = productList.filter((item) => {
-            const productTitle = item.title.toLowerCase();
-            const value = inputValue.toLowerCase();
-
-            return productTitle.startsWith(value);
-        });
-    }
-
+    if (searchValue) productList = getProductsBySearchInput(productList, searchValue);
     if (sortBy && sortBy !== 'default') productList = sortProductsArray(productList, sortBy);
 
     if (productList.length === 0) {
@@ -144,4 +136,19 @@ function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Pro
     else if (sortBy === sortValues[6]) originArr.sort((a, b) => b.discountPercentage - a.discountPercentage);
 
     return originArr;
+}
+
+function getProductsBySearchInput(originArr: Array<Product>, searchValue: string): Array<Product> {
+    const ignoredKeys = ['id', 'thumbnail', 'images'];
+    searchValue = searchValue.trim().toLowerCase();
+
+    return originArr.filter((item) => {
+        for (const key in item) {
+            if (!ignoredKeys.includes(key)) {
+                const keyValue = String(item[key]).toLowerCase();
+
+                if (keyValue.startsWith(searchValue)) return item;
+            }
+        }
+    });
 }
