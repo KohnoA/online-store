@@ -2,8 +2,7 @@ import products from '../../../constants/products.json';
 import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
-import { sortValues } from '../../../constants/data/data';
-import { cartArray } from '../../../constants/data/data';
+import { sortValues, cartArray } from '../../../constants/data/data';
 
 export function showProductsList(inputValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;

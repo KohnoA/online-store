@@ -20,3 +20,15 @@ export function createSelectOptions(arrValues: Array<string>, instert: HTMLEleme
         instert.append(option);
     });
 }
+
+export function setURLKey(name: string, value: string, valueToDelete: string): void {
+    const url = new URL(window.location.href);
+
+    if (value !== valueToDelete) {
+        url.searchParams.set(name, value);
+    } else {
+        url.searchParams.delete(name);
+    }
+
+    window.history.pushState(null, '', url);
+}

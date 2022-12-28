@@ -98,13 +98,15 @@ function setGridSelection(event: Event): void {
     if (select && select instanceof HTMLSelectElement) {
         const currentValue = select.selectedIndex;
 
-        if (currentValue === 0) {
+        if (gridValues[currentValue] === '3') {
             catalogMain.classList.remove('catalog__main_four-columns');
             catalogMain.classList.add('catalog__main_three-columns');
-        } else if (currentValue === 1) {
+        } else if (gridValues[currentValue] === '4') {
             catalogMain.classList.add('catalog__main_four-columns');
             catalogMain.classList.remove('catalog__main_three-columns');
         }
+
+        utils.setURLKey('show', String(!!currentValue), 'false');
     }
 }
 
@@ -113,4 +115,7 @@ function catalogHeaderEvents(): void {
     const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
 
     showProductsList(searchInput.value, sortValues[selectSortBy.selectedIndex]);
+
+    utils.setURLKey('sort', sortValues[selectSortBy.selectedIndex], 'default');
+    utils.setURLKey('search', searchInput.value, '');
 }
