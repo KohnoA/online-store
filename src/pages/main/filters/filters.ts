@@ -1,6 +1,5 @@
 import productsJson from '../../../constants/products.json';
 import * as func from '../../../utils/index';
-import { createCatalog } from '../catalog/catalog';
 import { Product } from 'constants/types/types';
 import { createPriceAndStockSlider } from './slider';
 import './filters.scss';
@@ -8,17 +7,7 @@ import './filters.scss';
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
 const maxLengthToShow = 7;
 
-export function createFilterPage() {
-    const container = func.createElement('container', 'main-container', 'container');
-
-    const aside = createAsideBar();
-    const article = createCatalog();
-
-    container.append(aside, article);
-    document.querySelector('.main')?.append(container);
-}
-
-function createAsideBar() {
+export function createAsideBar() {
     const aside = func.createElement('aside', 'aside');
     const container = func.createElement('container', 'aside-container');
 

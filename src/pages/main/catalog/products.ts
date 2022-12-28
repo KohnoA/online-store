@@ -57,11 +57,7 @@ function createProductCard(item: Product): HTMLElement {
     productTitle.textContent = item.title;
     productDiscountNode.textContent = `-${roundedDiscount}%`;
 
-    productItem.append(productImage);
-    productItem.append(productTitle);
-    productItem.append(productPrice);
-    productItem.append(productButton);
-    productItem.append(productDiscountNode);
+    productItem.append(productImage, productTitle, productPrice, productButton, productDiscountNode);
 
     productButton.addEventListener('click', productButtonEvent);
 
@@ -77,9 +73,7 @@ function createProductPrice(price: number, discount: number): HTMLElement {
     productCurrentPrice.textContent = `${price}€`;
     productPriceWithoutDiscount.textContent = `${priceWithoutDiscount}€`;
 
-    productPrice.append(productCurrentPrice);
-    productPrice.append(' / ');
-    productPrice.append(productPriceWithoutDiscount);
+    productPrice.append(productCurrentPrice, ' / ', productPriceWithoutDiscount);
 
     return productPrice;
 }

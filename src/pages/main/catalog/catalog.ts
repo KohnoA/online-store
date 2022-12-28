@@ -11,9 +11,7 @@ export function createCatalog(): HTMLElement {
 
     h1.textContent = 'Catalog';
 
-    catalog.append(h1);
-    catalog.append(catalogHeader);
-    catalog.append(catalogMain);
+    catalog.append(h1, catalogHeader, catalogMain);
 
     return catalog;
 }
@@ -25,10 +23,7 @@ function createCatalogHeader(): HTMLElement {
     const searchInput = createSearchProduct();
     const gridSelection = createSelectGrid();
 
-    catalogHeader.append(sortSelection);
-    catalogHeader.append(foundProducts);
-    catalogHeader.append(searchInput);
-    catalogHeader.append(gridSelection);
+    catalogHeader.append(sortSelection, foundProducts, searchInput, gridSelection);
 
     return catalogHeader;
 }
@@ -44,8 +39,7 @@ function createSortSelection(): HTMLElement {
 
     sortSelection.addEventListener('change', catalogHeaderEvents);
 
-    container.append(sortDescription);
-    container.append(sortSelection);
+    container.append(sortDescription, sortSelection);
 
     return container;
 }
