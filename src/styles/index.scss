@@ -13,18 +13,16 @@ html {
 
 .body {
   min-height: 100vh;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   font-family: 'Montserrat', 'Arial', sans-serif;
   color: black;
-
   background-color: white;
 }
 
 .container {
   max-width: 1160px;
   margin: 0 auto;
+  padding: 0 1.25rem;
 }

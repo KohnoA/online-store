@@ -1,10 +1,10 @@
 import './footer.scss';
 import rssImageSrc from '../../assets/icons/rsschool-logo.svg';
 
-export function createFooter(): void {
-    const footer: HTMLElement = document.createElement('footer');
-    const container: HTMLElement = document.createElement('div');
-    const logo: HTMLElement = document.createElement('p');
+export function createFooter(): HTMLElement {
+    const footer = document.createElement('footer');
+    const container = document.createElement('div');
+    const logo = document.createElement('p');
     const rssContainer = createRss();
     const githubsContainer = createGitHubs();
 
@@ -18,13 +18,14 @@ export function createFooter(): void {
     container.append(logo);
     container.append(githubsContainer);
     footer.append(container);
-    (document.querySelector('.body') as Element).append(footer);
+
+    return footer;
 }
 
 function createGitHubs(): HTMLElement {
-    const githubLinks: HTMLElement = document.createElement('p');
-    const githubSqooa: HTMLElement = document.createElement('a');
-    const githubKohnoa: HTMLElement = document.createElement('a');
+    const githubLinks = document.createElement('p');
+    const githubSqooa = document.createElement('a');
+    const githubKohnoa = document.createElement('a');
 
     githubLinks.classList.add('footer__production');
     githubSqooa.classList.add('footer__aqooa');
@@ -43,8 +44,8 @@ function createGitHubs(): HTMLElement {
 }
 
 function createRss(): HTMLElement {
-    const rssLink: HTMLElement = document.createElement('a');
-    const rssImage: HTMLImageElement = document.createElement('img');
+    const rssLink = document.createElement('a');
+    const rssImage = document.createElement('img');
 
     rssLink.classList.add('rss');
     rssImage.classList.add('rss__image');
