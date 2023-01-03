@@ -1,0 +1,58 @@
+.summary {
+    font-size: 1rem;
+}
+
+.summary__title {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.summary__product-amount {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.summary__total-cash {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.summary__promo-code {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: inherit;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+}
+
+.summary__code-description {
+    text-align: center;
+    margin-bottom: 50px;
+    opacity: .7;
+}
+
+.summary__buy-now {
+    width: 100%;
+    padding: 15px;
+    text-transform: uppercase;
+    color: white;
+    background-color: black;
+    border-radius: 2px;
+    transition: .2s;
+    
+    &:hover {
+        color: black;
+        background-color: #ccc;
+    }
+
+    &:active {
+        opacity: .6;
+    }
+}

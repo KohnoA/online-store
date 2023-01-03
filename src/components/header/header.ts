@@ -52,8 +52,7 @@ function createNavigation(): HTMLElement {
     basketCount.textContent = '0';
     a.setAttribute('href', 'cart');
 
-    a.append(basketImage);
-    a.append(basketCount);
+    a.append(basketImage, basketCount);
 
     if (liBasket instanceof HTMLElement) {
         liBasket.append(a);
@@ -62,8 +61,7 @@ function createNavigation(): HTMLElement {
 
     p.prepend(span);
     liTotalCash.append(p);
-    ul.append(liTotalCash);
-    ul.append(liBasket);
+    ul.append(liTotalCash, liBasket);
 
     return ul;
 }
