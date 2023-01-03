@@ -155,6 +155,10 @@
         color: black;
         background-color: #ccc;
     }
+
+    &:active {
+        opacity: .6;
+    }
 }
 
 .product__button_active {

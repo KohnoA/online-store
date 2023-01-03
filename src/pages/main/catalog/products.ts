@@ -3,6 +3,7 @@ import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
+import { routing } from '../../../index';
 
 export function showProductsList(searchValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
@@ -51,6 +52,13 @@ function createProductCard(item: Product): HTMLElement {
 
     productItem.append(productImage, productTitle, productPrice, productButton, productDiscountNode);
 
+    productItem.addEventListener('click', (event) => {
+        if ((event.target as HTMLElement).closest('button')) return;
+
+        window.history.pushState({}, '', `/#product-details/${item.id}`);
+        routing();
+        event.preventDefault();
+    });
     productButton.addEventListener('click', productButtonEvent);
 
     return productItem;
@@ -70,7 +78,7 @@ function createProductPrice(price: number, discount: number): HTMLElement {
     return productPrice;
 }
 
-function setProductImage(product: HTMLElement, url: string): void {
+export function setProductImage(product: HTMLElement, url: string): void {
     const img = new Image();
 
     product.style.backgroundImage = `url('${defaultProductImage}')`;

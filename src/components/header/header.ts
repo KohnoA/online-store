@@ -1,4 +1,5 @@
 import './header.scss';
+import { routing } from '../../index';
 
 export function createPageHeader(): HTMLElement {
     const header = document.createElement('header');
@@ -22,8 +23,8 @@ function createLogo(): HTMLElement {
 
     logo.textContent = 'Online Store';
     logo.setAttribute('href', '/');
-
     logo.classList.add('logo');
+    logo.addEventListener('click', headerEvent);
 
     return logo;
 }
@@ -51,6 +52,7 @@ function createNavigation(): HTMLElement {
     span.textContent = '0';
     basketCount.textContent = '0';
     a.setAttribute('href', 'cart');
+    a.addEventListener('click', headerEvent);
 
     a.append(basketImage, basketCount);
 
@@ -64,4 +66,16 @@ function createNavigation(): HTMLElement {
     ul.append(liTotalCash, liBasket);
 
     return ul;
+}
+
+function headerEvent(event: Event): void {
+    const target = event.target;
+
+    if (target && target instanceof HTMLElement) {
+        if (target.closest('.basket')) window.history.pushState({}, '', '/#cart');
+        else if (target.closest('.logo')) window.history.pushState({}, '', '#');
+    }
+
+    routing();
+    event.preventDefault();
 }
