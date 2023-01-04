@@ -52,6 +52,7 @@ function createProductCard(item: Product): HTMLElement {
 
     productItem.append(productImage, productTitle, productPrice, productButton, productDiscountNode);
 
+    //Ошибка много листнеров получается
     productItem.addEventListener('click', (event) => {
         if ((event.target as HTMLElement).closest('button')) return;
 

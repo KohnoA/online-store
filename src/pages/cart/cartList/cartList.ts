@@ -3,6 +3,7 @@ import * as utils from '../../../utils/index';
 import { cartArray } from '../../../constants/data/data';
 import { Product } from 'constants/types/types';
 import { setProductImage } from '../../main/catalog/products';
+import { routing } from '../../../index';
 
 export function createCartList(): HTMLElement {
     const cartList = utils.createElement('section', 'in-cart');
@@ -10,6 +11,8 @@ export function createCartList(): HTMLElement {
     const mainList = createMainCartList();
 
     cartList.append(headerList, mainList);
+
+    mainList.addEventListener('click', productsInCartEvent);
 
     return cartList;
 }
@@ -45,23 +48,25 @@ function createHeaderCartList(): HTMLElement {
 function createMainCartList(): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
     cartArray.forEach((item, index) => {
-        mainList.append(createProductCard(item, index));
+        mainList.append(createProductCard(item, index, item.id));
     });
 
     return mainList;
 }
 
-function createProductCard(item: Product, index: number): HTMLElement {
+function createProductCard(item: Product, index: number, itemId: number): HTMLElement {
     const card = utils.createElement('a', 'cart-product');
     const productNumber = utils.createElement('div', 'cart-product__number');
     const productImage = utils.createElement('div', 'cart-product__image');
     const productInfo = createProductCartInfo(item.title, item.description, item.rating, item.discountPercentage);
     const numberControl = createProductCartNumberControl(item.stock, item.price);
+    const productId = utils.createElement('span', 'cart-product__id');
 
     productNumber.textContent = `${index + 1}`;
     setProductImage(productImage, item.thumbnail);
+    productId.textContent = `${itemId}`;
 
-    card.append(productNumber, productImage, productInfo, numberControl);
+    card.append(productId, productNumber, productImage, productInfo, numberControl);
 
     return card;
 }
@@ -106,4 +111,21 @@ function createProductCartNumberControl(stock: number, price: number): HTMLEleme
     numberControl.append(productStock, controls, productPrice);
 
     return numberControl;
+}
+
+function productsInCartEvent(event: Event): void {
+    if (event.target && event.target instanceof HTMLElement) {
+        let target = event.target;
+
+        if (target.closest('.cart-product__info') || target.closest('.cart-product__image')) {
+            while (!target.classList.contains('cart-product')) {
+                target = target.parentElement as HTMLElement;
+            }
+
+            const id = target.querySelector('.cart-product__id')?.textContent;
+
+            window.history.pushState({}, '', `/#product-details/${id}`);
+            routing();
+        }
+    }
 }
