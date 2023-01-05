@@ -2,7 +2,8 @@ import './cartList.scss';
 import * as utils from '../../../utils/index';
 import { cartArray } from '../../../constants/data/data';
 import { Product } from 'constants/types/types';
-import { setProductImage } from '../../main/catalog/products';
+import { setProductImage, setCashAndCartItems } from '../../main/catalog/products';
+import { setCashAndCartItemsInCart, cartIsEmpty } from '../cart';
 
 export function createCartList(): HTMLElement {
     const cartList = utils.createElement('section', 'in-cart');
@@ -47,30 +48,30 @@ function createHeaderCartList(): HTMLElement {
 function createMainCartList(): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
     cartArray.forEach((item, index) => {
-        mainList.append(createProductCard(item, index, item.id));
+        mainList.append(createProductCard(item, index));
     });
 
     return mainList;
 }
 
-function createProductCard(item: Product, index: number, itemId: number): HTMLElement {
+function createProductCard(item: Product, index: number): HTMLElement {
     const card = utils.createElement('a', 'cart-product', 'product');
     const productNumber = utils.createElement('div', 'cart-product__number');
     const productImage = utils.createElement('div', 'cart-product__image');
-    const productInfo = createProductCartInfo(item.title, item.description, item.rating, item.discountPercentage);
-    const numberControl = createProductCartNumberControl(item.stock, item.price);
     const productId = utils.createElement('span', 'product__id');
+    const productInfo = createProductInfo(item.title, item.description, item.rating, item.discountPercentage);
+    const numberControl = createNumberControl(item.stock, item.price, item.id, card, item.count);
 
     productNumber.textContent = `${index + 1}`;
+    productId.textContent = `${item.id}`;
     setProductImage(productImage, item.thumbnail);
-    productId.textContent = `${itemId}`;
 
     card.append(productId, productNumber, productImage, productInfo, numberControl);
 
     return card;
 }
 
-function createProductCartInfo(title: string, desc: string, rating: number, discount: number): HTMLElement {
+function createProductInfo(title: string, desc: string, rating: number, discount: number): HTMLElement {
     const productInfo = utils.createElement('div', 'cart-product__info');
     const productTitle = utils.createElement('p', 'cart-product__title');
     const productDescription = utils.createElement('p', 'cart-product__description');
@@ -89,7 +90,13 @@ function createProductCartInfo(title: string, desc: string, rating: number, disc
     return productInfo;
 }
 
-function createProductCartNumberControl(stock: number, price: number): HTMLElement {
+function createNumberControl(
+    stock: number,
+    price: number,
+    id: number,
+    card: HTMLElement,
+    itemCount: number | undefined
+): HTMLElement {
     const numberControl = utils.createElement('div', 'cart-product__number-control');
     const productStock = utils.createElement('p', 'cart-product__stock');
     const productPrice = utils.createElement('p', 'cart-product__price');
@@ -99,14 +106,14 @@ function createProductCartNumberControl(stock: number, price: number): HTMLEleme
     const inc = utils.createElement('button', 'number-controls__inc');
 
     productStock.textContent = `Stock: ${stock}`;
-    productPrice.textContent = `${price}€`;
-    count.textContent = '1';
+    itemCount ? (count.textContent = String(itemCount)) : (count.textContent = '1');
+    itemCount ? (productPrice.textContent = `${price * itemCount}€`) : (productPrice.textContent = `${price}€`);
     dec.textContent = '+';
     dec.setAttribute('type', 'button');
     inc.textContent = '-';
     inc.setAttribute('type', 'button');
 
-    const decIncInstance = decIncNumberOfProduct(price);
+    const decIncInstance = decIncNumberOfProduct(price, id, card);
     controls.addEventListener('click', decIncInstance);
 
     controls.append(dec, count, inc);
@@ -115,36 +122,52 @@ function createProductCartNumberControl(stock: number, price: number): HTMLEleme
     return numberControl;
 }
 
-function decIncNumberOfProduct(originPrice: number): (event: Event) => void {
+function decIncNumberOfProduct(originPrice: number, id: number, card: HTMLElement): (event: Event) => void {
     return (event: Event) => {
         if (event.target && event.target instanceof HTMLElement) {
             const target = event.target;
-            const countNode = target.parentElement?.querySelector('.number-controls__count') as HTMLElement;
-            const priceNode = target.parentElement?.nextElementSibling as HTMLElement;
+            const countNode = card.querySelector('.number-controls__count') as HTMLElement;
+            const priceNode = card.querySelector('.cart-product__price') as HTMLElement;
+            const currentProduct = cartArray.find((item) => item.id === id) as Product;
 
-            if (target.closest('.number-controls__dec')) decEvent(countNode, priceNode, target, originPrice);
-            else if (target.closest('.number-controls__inc')) incEvent(countNode, priceNode, originPrice);
+            if (target.closest('.number-controls__dec')) {
+                const stockNode = card.querySelector('.cart-product__stock') as HTMLElement;
+                const stockNum = Number(stockNode.textContent?.slice(-2));
+                const resultCount = Number(countNode.textContent) + 1;
+
+                if (resultCount > stockNum) return;
+
+                if (cartArray.includes(currentProduct)) {
+                    cartArray.forEach((item) => {
+                        if (item === currentProduct) {
+                            item.count ? (item.count += 1) : (item.count = 2);
+                        }
+                    });
+                }
+
+                priceNode.textContent = `${originPrice * resultCount}€`;
+                countNode.textContent = String(resultCount);
+            } else if (target.closest('.number-controls__inc')) {
+                const resultCount = Number(countNode.textContent) - 1;
+                const currentPrice = Number(priceNode.textContent?.slice(0, -1));
+
+                cartArray.forEach((item, index, array) => {
+                    if (item === currentProduct) {
+                        if (!item.count || item.count <= 1) {
+                            array.splice(index, 1);
+                            card.remove();
+                        } else item.count -= 1;
+                    }
+                });
+
+                priceNode.textContent = `${currentPrice - originPrice}€`;
+                countNode.textContent = String(resultCount);
+            }
+
+            // сделалать эти функции одной
+            setCashAndCartItems();
+            setCashAndCartItemsInCart();
+            if (cartArray.length === 0) cartIsEmpty();
         }
     };
-}
-
-function decEvent(countNode: HTMLElement, priceNode: HTMLElement, targetElem: HTMLElement, originPrice: number): void {
-    const stockNode = targetElem.parentElement?.previousElementSibling as HTMLElement;
-    const stockNum = Number(stockNode.textContent?.slice(-2));
-    const resultCount = Number(countNode.textContent) + 1;
-
-    if (resultCount > stockNum) return;
-
-    priceNode.textContent = `${originPrice * resultCount}€`;
-    countNode.textContent = String(resultCount);
-}
-
-function incEvent(countNode: HTMLElement, priceNode: HTMLElement, originPrice: number): void {
-    const resultCount = Number(countNode.textContent) - 1;
-    const currentPrice = Number(priceNode.textContent?.slice(0, -1));
-
-    if (resultCount < 1) return;
-
-    priceNode.textContent = `${currentPrice - originPrice}€`;
-    countNode.textContent = String(resultCount);
 }

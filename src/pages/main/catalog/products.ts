@@ -94,28 +94,33 @@ function productButtonEvent(event: Event): void {
     if (!(target instanceof HTMLElement)) return;
 
     const targetProductTitle = target.parentElement?.querySelector('.product__title')?.textContent;
-    const targetProductPrice = target.parentElement
-        ?.querySelector('.product__current-price')
-        ?.textContent?.slice(0, -1) as string;
     const productList: Array<Product> = products.products;
     const addProduct = productList.find((item) => item.title === targetProductTitle);
 
     if (addProduct) cartArray.push(addProduct);
 
     setButtonInCart(target);
-    setCashAndCartItems(targetProductPrice);
+    setCashAndCartItems();
 
     event.preventDefault();
 }
 
-export function setCashAndCartItems(addCash: string): void {
-    const totalCashNode = document.getElementById('total-cash') as HTMLElement;
-    const cartItems = document.getElementById('count-purchases') as HTMLElement;
-    const currentTotalCash = totalCashNode.textContent as string;
-    const result = +currentTotalCash + +addCash;
+export function setCashAndCartItems(): void {
+    const totalCashInCart = document.getElementById('total-cash') as HTMLElement;
+    const countItemsInCart = document.getElementById('count-purchases') as HTMLElement;
 
-    cartItems.textContent = String(cartArray.length);
-    totalCashNode.textContent = String(result);
+    countItemsInCart.textContent = String(
+        cartArray.reduce((acc, next) => {
+            if (next.count) return acc + next.count;
+            else return acc + 1;
+        }, 0)
+    );
+    totalCashInCart.textContent = String(
+        cartArray.reduce((acc, next) => {
+            if (next.count) return acc + next.price * next.count;
+            else return acc + next.price;
+        }, 0)
+    );
 }
 
 export function numberOfProductsInCatalog(): void {
