@@ -79,7 +79,7 @@
 }
 
 .catalog__not-found {
-    place-self: center center;
+    place-self: start center;
     text-transform: uppercase;
     font-size: 1.1rem;
 }
@@ -108,10 +108,6 @@
 
         background-color: red;
     }
-
-    // &:hover {
-    //     box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
-    // }
 }
 
 .product__image {
@@ -175,4 +171,8 @@
         color: black;
         background-color: white;
     }
+}
+
+.product__id {
+    display: none;
 }

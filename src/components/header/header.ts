@@ -1,5 +1,6 @@
 import './header.scss';
-import { routing } from '../../index';
+import { routing } from '../../pages/app/createApp';
+import { Pages } from '../../constants/data/data';
 
 export function createPageHeader(): HTMLElement {
     const header = document.createElement('header');
@@ -72,8 +73,8 @@ function headerEvent(event: Event): void {
     const target = event.target;
 
     if (target && target instanceof HTMLElement) {
-        if (target.closest('.basket')) window.history.pushState({}, '', '/#cart');
-        else if (target.closest('.logo')) window.history.pushState({}, '', '#');
+        if (target.closest('.basket')) window.history.pushState({}, '', Pages.cart);
+        else if (target.closest('.logo')) window.history.pushState({}, '', Pages.main);
     }
 
     routing();

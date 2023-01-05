@@ -3,7 +3,6 @@ import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
-import { routing } from '../../../index';
 
 export function showProductsList(searchValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
@@ -31,6 +30,8 @@ export function showProductsList(searchValue?: string, sortBy?: string): void {
         });
     }
 
+    catalogMain.addEventListener('click', utils.switchOnProductPage);
+
     numberOfProductsInCatalog();
 }
 
@@ -40,26 +41,20 @@ function createProductCard(item: Product): HTMLElement {
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
     const productDiscountNode = utils.createElement('div', 'product__discount');
+    const productId = utils.createElement('span', 'product__id');
     const roundedDiscount = Math.round(item.discountPercentage);
     const productPrice = createProductPrice(item.price, item.discountPercentage);
 
     setProductImage(productImage, item.thumbnail);
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
-    productItem.setAttribute('href', `product-details/${item.id}`);
+    productItem.setAttribute('href', `/`);
     productTitle.textContent = item.title;
     productDiscountNode.textContent = `-${roundedDiscount}%`;
+    productId.textContent = `${item.id}`;
 
-    productItem.append(productImage, productTitle, productPrice, productButton, productDiscountNode);
+    productItem.append(productId, productImage, productTitle, productPrice, productButton, productDiscountNode);
 
-    //Ошибка много листнеров получается
-    productItem.addEventListener('click', (event) => {
-        if ((event.target as HTMLElement).closest('button')) return;
-
-        window.history.pushState({}, '', `/#product-details/${item.id}`);
-        routing();
-        event.preventDefault();
-    });
     productButton.addEventListener('click', productButtonEvent);
 
     return productItem;

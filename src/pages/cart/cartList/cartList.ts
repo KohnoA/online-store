@@ -3,7 +3,6 @@ import * as utils from '../../../utils/index';
 import { cartArray } from '../../../constants/data/data';
 import { Product } from 'constants/types/types';
 import { setProductImage } from '../../main/catalog/products';
-import { routing } from '../../../index';
 
 export function createCartList(): HTMLElement {
     const cartList = utils.createElement('section', 'in-cart');
@@ -12,7 +11,7 @@ export function createCartList(): HTMLElement {
 
     cartList.append(headerList, mainList);
 
-    mainList.addEventListener('click', productsInCartEvent);
+    mainList.addEventListener('click', utils.switchOnProductPage);
 
     return cartList;
 }
@@ -55,12 +54,12 @@ function createMainCartList(): HTMLElement {
 }
 
 function createProductCard(item: Product, index: number, itemId: number): HTMLElement {
-    const card = utils.createElement('a', 'cart-product');
+    const card = utils.createElement('a', 'cart-product', 'product');
     const productNumber = utils.createElement('div', 'cart-product__number');
     const productImage = utils.createElement('div', 'cart-product__image');
     const productInfo = createProductCartInfo(item.title, item.description, item.rating, item.discountPercentage);
     const numberControl = createProductCartNumberControl(item.stock, item.price);
-    const productId = utils.createElement('span', 'cart-product__id');
+    const productId = utils.createElement('span', 'product__id');
 
     productNumber.textContent = `${index + 1}`;
     setProductImage(productImage, item.thumbnail);
@@ -107,25 +106,45 @@ function createProductCartNumberControl(stock: number, price: number): HTMLEleme
     inc.textContent = '-';
     inc.setAttribute('type', 'button');
 
+    const decIncInstance = decIncNumberOfProduct(price);
+    controls.addEventListener('click', decIncInstance);
+
     controls.append(dec, count, inc);
     numberControl.append(productStock, controls, productPrice);
 
     return numberControl;
 }
 
-function productsInCartEvent(event: Event): void {
-    if (event.target && event.target instanceof HTMLElement) {
-        let target = event.target;
+function decIncNumberOfProduct(originPrice: number): (event: Event) => void {
+    return (event: Event) => {
+        if (event.target && event.target instanceof HTMLElement) {
+            const target = event.target;
+            const countNode = target.parentElement?.querySelector('.number-controls__count') as HTMLElement;
+            const priceNode = target.parentElement?.nextElementSibling as HTMLElement;
 
-        if (target.closest('.cart-product__info') || target.closest('.cart-product__image')) {
-            while (!target.classList.contains('cart-product')) {
-                target = target.parentElement as HTMLElement;
-            }
-
-            const id = target.querySelector('.cart-product__id')?.textContent;
-
-            window.history.pushState({}, '', `/#product-details/${id}`);
-            routing();
+            if (target.closest('.number-controls__dec')) decEvent(countNode, priceNode, target, originPrice);
+            else if (target.closest('.number-controls__inc')) incEvent(countNode, priceNode, originPrice);
         }
-    }
+    };
+}
+
+function decEvent(countNode: HTMLElement, priceNode: HTMLElement, targetElem: HTMLElement, originPrice: number): void {
+    const stockNode = targetElem.parentElement?.previousElementSibling as HTMLElement;
+    const stockNum = Number(stockNode.textContent?.slice(-2));
+    const resultCount = Number(countNode.textContent) + 1;
+
+    if (resultCount > stockNum) return;
+
+    priceNode.textContent = `${originPrice * resultCount}€`;
+    countNode.textContent = String(resultCount);
+}
+
+function incEvent(countNode: HTMLElement, priceNode: HTMLElement, originPrice: number): void {
+    const resultCount = Number(countNode.textContent) - 1;
+    const currentPrice = Number(priceNode.textContent?.slice(0, -1));
+
+    if (resultCount < 1) return;
+
+    priceNode.textContent = `${currentPrice - originPrice}€`;
+    countNode.textContent = String(resultCount);
 }
