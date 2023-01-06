@@ -1,11 +1,11 @@
 import productsJson from '../../../constants/products.json';
+import languageJson from '../../../constants/language.json';
 import * as func from '../../../utils/index';
 import { Product } from 'constants/types/types';
 import { createPriceAndStockSlider } from './slider';
 import './filters.scss';
 
 const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
-const maxLengthToShow = 7;
 
 export function createAsideBar() {
     const aside = func.createElement('aside', 'aside');
@@ -47,17 +47,42 @@ function createFilters() {
     return ul;
 }
 
-function createProductsList(category: string) {
-    const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase(), maxLengthToShow);
+function createProductsList(category: string, filtersContainer?: HTMLElement) {
+    const categoryArr = createArrOfProducts(productsJson.products, category.toLowerCase());
     let form: HTMLElement;
+
+    const input = func.createElement(
+        'input',
+        'aside-product-form__search',
+        'aside-product-form_hidden'
+    ) as HTMLInputElement;
+    input.placeholder = languageJson['ru']['search-placeholder'];
 
     if (category !== 'Price' && category !== 'Stock') {
         form = func.createElement('form', 'aside-product-form', 'aside-product-form_hidden');
+        form.append(input);
     } else {
         form = func.createElement('form', 'aside-product-form');
     }
 
-    for (const product of categoryArr) {
+    const containerElements = createProductsListElements(categoryArr);
+
+    if (category === 'Price' || category === 'Stock') {
+        createPriceAndStockSlider(form, category.toLowerCase());
+    } else {
+        const button = func.createElement('button', 'aside-product-form__button');
+        button.textContent = languageJson['ru']['button-showAll'];
+        !filtersContainer ? form.append(containerElements, button) : form.append(filtersContainer, button);
+    }
+
+    return form;
+}
+
+function createProductsListElements(map: Map<string, number>) {
+    const container = func.createElement('div', 'aside-product-form-container', 'aside-product-form-container_hidden');
+    container.innerHTML = '';
+
+    for (const product of map) {
         const label = func.createElement('label', 'aside-product-form__label');
 
         const checkbox = func.createElement('input', 'aside-product-form__checkbox') as HTMLInputElement;
@@ -71,17 +96,13 @@ function createProductsList(category: string) {
         span.textContent = `(${product[1]}/${product[1]})`;
 
         label.append(checkbox, a, span);
-        form.append(label);
+        container.append(label);
     }
 
-    if (category === 'Price' || category === 'Stock') {
-        createPriceAndStockSlider(form, category.toLowerCase());
-    }
-
-    return form;
+    return container;
 }
 
-function createArrOfProducts(products: Product[], category: string, length?: number) {
+function createArrOfProducts(products: Product[], category: string) {
     const map: Map<string, number> = new Map();
 
     products.forEach((product) => {
@@ -93,14 +114,8 @@ function createArrOfProducts(products: Product[], category: string, length?: num
             }
 
             map.set(product[category], num);
-
-            if (length && map.size > length) {
-                map.delete(product[category]);
-                return;
-            }
         }
     });
-
     return map;
 }
 
@@ -131,3 +146,55 @@ function setUrlHash(e: Event) {
     window.location.hash = hash;
     return hash;
 }
+
+export function showAllFilters(e: Event) {
+    const target = e.target as HTMLElement;
+
+    if (!target.closest('.aside-product-form__button')) return;
+    e.preventDefault();
+
+    const form = target.parentElement as HTMLElement;
+    const input = form.querySelector('.aside-product-form__search') as HTMLElement;
+    const containerElements = form.querySelector('.aside-product-form-container') as HTMLDivElement;
+
+    input.classList.toggle('aside-product-form_hidden');
+    const textBtn =
+        target.textContent === languageJson['ru']['button-hiddenAll']
+            ? languageJson['ru']['button-showAll']
+            : languageJson['ru']['button-hiddenAll'];
+    target.textContent = textBtn;
+
+    containerElements.classList.toggle('aside-product-form-container_hidden');
+}
+
+function filterArrOfProducts(e: Event) {
+    const target = e.target as HTMLInputElement;
+
+    if (!target.closest('.aside-product-form__search')) return;
+
+    const form = target.parentElement as HTMLElement;
+    const li = form.parentElement as HTMLElement;
+    const category = li.querySelector('.aside-product__text')?.textContent?.toLowerCase() as string;
+
+    const arr = Array.from(createArrOfProducts(productsJson.products, category));
+
+    const value = target.value.trim().toLowerCase();
+    const map = Object(arr.filter((item) => item[0].startsWith(value)));
+
+    const container = createProductsListElements(map);
+    container.classList.remove('aside-product-form-container_hidden');
+    container.children.length
+        ? (form.children[1].innerHTML = container.innerHTML)
+        : (form.children[1].innerHTML = 'Элемент не найден');
+}
+
+function changeCheckboxes(e: Event) {
+    const target = e.target as HTMLElement;
+
+    if (!target.closest('.aside-product-form__label')) return;
+
+    console.log(target);
+}
+
+document.addEventListener('change', changeCheckboxes);
+document.addEventListener('input', (e) => filterArrOfProducts(e));

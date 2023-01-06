@@ -1,6 +1,6 @@
 import * as utils from '../../utils/index';
 import { createCatalog } from './catalog/catalog';
-import { createAsideBar } from './filters/filters';
+import { createAsideBar, showAllFilters } from './filters/filters';
 import { showProductsList } from './catalog/products';
 
 export function createFilterPage() {
@@ -14,3 +14,5 @@ export function createFilterPage() {
 
     showProductsList();
 }
+
+document.addEventListener('click', (e) => showAllFilters(e));
