@@ -30,6 +30,8 @@ export function showProductsList(searchValue?: string, sortBy?: string): void {
         });
     }
 
+    catalogMain.addEventListener('click', utils.switchOnProductPage);
+
     numberOfProductsInCatalog();
 }
 
@@ -39,17 +41,19 @@ function createProductCard(item: Product): HTMLElement {
     const productButton = utils.createElement('button', 'product__button');
     const productTitle = utils.createElement('span', 'product__title');
     const productDiscountNode = utils.createElement('div', 'product__discount');
+    const productId = utils.createElement('span', 'product__id');
     const roundedDiscount = Math.round(item.discountPercentage);
     const productPrice = createProductPrice(item.price, item.discountPercentage);
 
     setProductImage(productImage, item.thumbnail);
     productButton.textContent = 'add to cart';
     productButton.setAttribute('type', 'button');
-    productItem.setAttribute('href', `product-details/${item.id}`);
+    productItem.setAttribute('href', `/`);
     productTitle.textContent = item.title;
     productDiscountNode.textContent = `-${roundedDiscount}%`;
+    productId.textContent = `${item.id}`;
 
-    productItem.append(productImage, productTitle, productPrice, productButton, productDiscountNode);
+    productItem.append(productId, productImage, productTitle, productPrice, productButton, productDiscountNode);
 
     productButton.addEventListener('click', productButtonEvent);
 
@@ -70,7 +74,7 @@ function createProductPrice(price: number, discount: number): HTMLElement {
     return productPrice;
 }
 
-function setProductImage(product: HTMLElement, url: string): void {
+export function setProductImage(product: HTMLElement, url: string): void {
     const img = new Image();
 
     product.style.backgroundImage = `url('${defaultProductImage}')`;
@@ -90,28 +94,15 @@ function productButtonEvent(event: Event): void {
     if (!(target instanceof HTMLElement)) return;
 
     const targetProductTitle = target.parentElement?.querySelector('.product__title')?.textContent;
-    const targetProductPrice = target.parentElement
-        ?.querySelector('.product__current-price')
-        ?.textContent?.slice(0, -1) as string;
     const productList: Array<Product> = products.products;
     const addProduct = productList.find((item) => item.title === targetProductTitle);
 
     if (addProduct) cartArray.push(addProduct);
 
     setButtonInCart(target);
-    setCashAndCartItems(targetProductPrice);
+    utils.setSumAndQuantityInCart(document.getElementById('total-cash'), document.getElementById('count-purchases'));
 
     event.preventDefault();
-}
-
-export function setCashAndCartItems(addCash: string): void {
-    const totalCashNode = document.getElementById('total-cash') as HTMLElement;
-    const cartItems = document.getElementById('count-purchases') as HTMLElement;
-    const currentTotalCash = totalCashNode.textContent as string;
-    const result = +currentTotalCash + +addCash;
-
-    cartItems.textContent = String(cartArray.length);
-    totalCashNode.textContent = String(result);
 }
 
 export function numberOfProductsInCatalog(): void {

@@ -1,0 +1,13 @@
+.cart-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20vh;
+}
+
+.empty-cart {
+    margin: 0 auto;
+    padding: 10px 20px 10px 20px;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ccc;
+}

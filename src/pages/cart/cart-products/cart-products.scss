@@ -1,0 +1,155 @@
+.in-cart {
+    width: 65%; 
+    font-size: 1rem;
+}
+
+.in-cart__header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+}
+
+.in-cart__title {
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0px;
+    padding-bottom: 15px;
+}
+
+.in-cart__limit {
+    place-self: center center;
+
+    &:hover {
+        transition: .2s;
+        cursor: pointer;
+        opacity: .7;
+    }
+}
+
+.in-cart__limit-input {
+    max-width: 40px;
+    text-align: center;
+    font-size: inherit;
+}
+
+.in-cart__pages {
+    place-self: center center;
+}
+
+.in-cart__current-page {
+    display: inline-block;
+    min-width: 25px;
+    text-align: center;
+}
+
+.in-cart__page-prev, .in-cart__page-next {
+    padding: 10px;
+    background-image: url('../../../assets/icons/arrow-pointing-up.svg');
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: .2s;
+    vertical-align: text-top;
+
+    &:hover {
+        opacity: .7;
+    }
+    
+    &:active {
+        opacity: .5;
+    }
+}
+
+.in-cart__page-prev {
+    transform: rotate(-90deg);
+    margin-right: 3px;
+}
+
+.in-cart__page-next {
+    transform: rotate(90deg);
+    margin-left: 3px;
+}
+
+.cart-product {
+    display: grid;
+    grid-template-columns: 0.2fr 0.8fr 4fr 1fr;
+    margin-bottom: 30px;
+    cursor: default;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.cart-product__number {
+    place-self: center start;
+}
+
+.cart-product__image {
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    cursor: pointer;
+}
+
+.cart-product__info {
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.cart-product__title {
+    padding-bottom: 7px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.cart-product__description {
+    margin-bottom: 15px;
+}
+
+.cart-product__wrapper {
+    display: flex;
+    justify-content: space-between;
+    opacity: .5;
+}
+
+.cart-product__number-control {
+    place-self: center center;
+    text-align: center;
+}
+
+.cart-product__stock, .number-controls {
+    margin-bottom: 15px;
+}
+
+
+.number-controls__dec, .number-controls__inc {
+    width: 20px;
+    height: 20px;
+    font-size: inherit;
+    transition: .2s;
+
+    &:hover {
+        opacity: .7;
+    }
+    
+    &:active {
+        opacity: .5;
+    }
+}
+
+.number-controls__inc {
+    margin-left: 3px;
+}
+
+.number-controls__dec {
+    margin-right: 3px;
+}
+
+.number-controls__count {
+    display: inline-block;
+    min-width: 25px;
+}

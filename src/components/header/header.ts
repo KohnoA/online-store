@@ -1,4 +1,6 @@
 import './header.scss';
+import { routing } from '../../pages/app/createApp';
+import { Pages } from '../../constants/data/data';
 
 export function createPageHeader(): HTMLElement {
     const header = document.createElement('header');
@@ -22,8 +24,8 @@ function createLogo(): HTMLElement {
 
     logo.textContent = 'Online Store';
     logo.setAttribute('href', '/');
-
     logo.classList.add('logo');
+    logo.addEventListener('click', headerEvent);
 
     return logo;
 }
@@ -51,9 +53,9 @@ function createNavigation(): HTMLElement {
     span.textContent = '0';
     basketCount.textContent = '0';
     a.setAttribute('href', 'cart');
+    a.addEventListener('click', headerEvent);
 
-    a.append(basketImage);
-    a.append(basketCount);
+    a.append(basketImage, basketCount);
 
     if (liBasket instanceof HTMLElement) {
         liBasket.append(a);
@@ -62,8 +64,19 @@ function createNavigation(): HTMLElement {
 
     p.prepend(span);
     liTotalCash.append(p);
-    ul.append(liTotalCash);
-    ul.append(liBasket);
+    ul.append(liTotalCash, liBasket);
 
     return ul;
+}
+
+function headerEvent(event: Event): void {
+    const target = event.target;
+
+    if (target && target instanceof HTMLElement) {
+        if (target.closest('.basket')) window.history.pushState({}, '', `/${Pages.cart}`);
+        else if (target.closest('.logo')) window.history.pushState({}, '', `/${Pages.main}`);
+    }
+
+    routing();
+    event.preventDefault();
 }
