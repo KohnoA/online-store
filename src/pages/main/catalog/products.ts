@@ -100,27 +100,9 @@ function productButtonEvent(event: Event): void {
     if (addProduct) cartArray.push(addProduct);
 
     setButtonInCart(target);
-    setCashAndCartItems();
+    utils.setSumAndQuantityInCart(document.getElementById('total-cash'), document.getElementById('count-purchases'));
 
     event.preventDefault();
-}
-
-export function setCashAndCartItems(): void {
-    const totalCashInCart = document.getElementById('total-cash') as HTMLElement;
-    const countItemsInCart = document.getElementById('count-purchases') as HTMLElement;
-
-    countItemsInCart.textContent = String(
-        cartArray.reduce((acc, next) => {
-            if (next.count) return acc + next.count;
-            else return acc + 1;
-        }, 0)
-    );
-    totalCashInCart.textContent = String(
-        cartArray.reduce((acc, next) => {
-            if (next.count) return acc + next.price * next.count;
-            else return acc + next.price;
-        }, 0)
-    );
 }
 
 export function numberOfProductsInCatalog(): void {

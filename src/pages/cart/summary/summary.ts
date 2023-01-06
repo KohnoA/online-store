@@ -22,7 +22,7 @@ export function createSummary(): HTMLElement {
     buyButton.textContent = 'Buy Now';
     buyButton.setAttribute('type', 'button');
 
-    productsAmount.append(productsAmountInt);
+    productsAmount.append(productsAmountInt, '€');
     totalCash.append(totalCashInt);
     summary.append(title, productsAmount, totalCash, inputPromoCode, promoCodeDescription, buyButton);
 

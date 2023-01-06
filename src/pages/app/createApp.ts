@@ -25,7 +25,9 @@ export function routing() {
     const main = document.querySelector('.main') as HTMLElement;
     main.innerHTML = '';
 
-    if (hash === Pages.main.slice(1)) createFilterPage();
-    else if (hash === Pages.cart.slice(1)) createCart();
+    if (hash === Pages.main) createFilterPage();
+    else if (hash === Pages.cart) createCart();
+    // Здесь, должна быть твоя функция, что-то типа:
+    //else if (hash.startsWith(Pages.product)) createProductPage();
     else create404page();
 }

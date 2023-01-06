@@ -73,8 +73,8 @@ function headerEvent(event: Event): void {
     const target = event.target;
 
     if (target && target instanceof HTMLElement) {
-        if (target.closest('.basket')) window.history.pushState({}, '', Pages.cart);
-        else if (target.closest('.logo')) window.history.pushState({}, '', Pages.main);
+        if (target.closest('.basket')) window.history.pushState({}, '', `/${Pages.cart}`);
+        else if (target.closest('.logo')) window.history.pushState({}, '', `/${Pages.main}`);
     }
 
     routing();

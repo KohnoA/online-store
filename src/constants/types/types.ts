@@ -12,3 +12,7 @@ export interface Product {
     title: string;
     count?: number;
 }
+
+export type ArgsDecInc = [HTMLElement, HTMLElement, HTMLElement, Product, number];
+
+export type ArgsCreateNumberControl = [number, number, number, HTMLElement, number | undefined];

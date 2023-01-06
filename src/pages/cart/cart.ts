@@ -1,8 +1,9 @@
 import './cart.scss';
 import * as utils from '../../utils/index';
-import { createCartList } from './cartList/cartList';
+import { createCartProducts } from './cart-products/cart-products';
 import { createSummary } from './summary/summary';
 import { cartArray } from '../../constants/data/data';
+import { createCartPagination } from './cart-products/pagination';
 
 export function createCart(): void {
     const main = document.querySelector('.main') as HTMLElement;
@@ -14,14 +15,29 @@ export function createCart(): void {
         container.append(emptyCart);
     } else {
         const summaryNode = createSummary();
-        const cartListNode = createCartList();
+        const cartListNode = createCartProductList();
 
         container.append(cartListNode, summaryNode);
     }
 
     main.append(container);
 
-    setCashAndCartItemsInCart();
+    utils.setSumAndQuantityInCart(
+        document.querySelector('.summary__amount-int'),
+        document.querySelector('.summary__cash-int')
+    );
+}
+
+function createCartProductList(): HTMLElement {
+    const cartList = utils.createElement('section', 'in-cart');
+    const headerList = createCartPagination();
+    const mainList = createCartProducts();
+
+    cartList.append(headerList, mainList);
+
+    mainList.addEventListener('click', utils.switchOnProductPage);
+
+    return cartList;
 }
 
 function createEmptyCart(): HTMLElement {
@@ -37,23 +53,5 @@ export function cartIsEmpty() {
     if (container) {
         container.innerHTML = '';
         container.append(createEmptyCart());
-    }
-}
-
-export function setCashAndCartItemsInCart(): void {
-    const productsAmountInt = document.querySelector('.summary__amount-int');
-    const totalCashInt = document.querySelector('.summary__cash-int');
-
-    if (productsAmountInt && totalCashInt) {
-        productsAmountInt.textContent = String(
-            cartArray.reduce((acc, next) => {
-                if (next.count) return acc + next.count;
-                else return acc + 1;
-            }, 0)
-        );
-        totalCashInt.textContent = `${cartArray.reduce((acc, next) => {
-            if (next.count) return acc + next.price * next.count;
-            else return acc + next.price;
-        }, 0)}€`;
     }
 }

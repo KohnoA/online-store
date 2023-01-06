@@ -1,5 +1,5 @@
 import { routing } from '../pages/app/createApp';
-import { Pages } from '../constants/data/data';
+import { Pages, cartArray } from '../constants/data/data';
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -50,10 +50,29 @@ export function switchOnProductPage(event: Event): void {
 
             const id = target.querySelector('.product__id')?.textContent;
 
-            window.history.pushState({}, '', `${Pages.product}${id}`);
+            window.history.pushState({}, '', `/${Pages.product}${id}`);
             routing();
         }
     }
 
     event.preventDefault();
+}
+
+export function setSumAndQuantityInCart<T>(cashNode: T, quantityNode: T): void {
+    if (!cashNode && !quantityNode) return;
+    if (!(cashNode instanceof HTMLElement) || !(quantityNode instanceof HTMLElement)) return;
+
+    quantityNode.textContent = String(
+        cartArray.reduce((acc, next) => {
+            if (next.count) return acc + next.count;
+            else return acc + 1;
+        }, 0)
+    );
+
+    cashNode.textContent = String(
+        cartArray.reduce((acc, next) => {
+            if (next.count) return acc + next.price * next.count;
+            else return acc + next.price;
+        }, 0)
+    );
 }
