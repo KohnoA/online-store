@@ -6,10 +6,14 @@ import { setProductImage } from '../../main/catalog/products';
 import { cartIsEmpty } from '../cart';
 import { recalculationTotalCash, clearPromoCodes } from '../summary/summary';
 
-export function createCartProducts(): HTMLElement {
+export function createCartProducts(from = 1, to = 3): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
     cartArray.forEach((item, index) => {
-        mainList.append(createProductCard(item, index));
+        const itemNumber = index + 1;
+
+        if (itemNumber >= from && itemNumber <= to) {
+            mainList.append(createProductCard(item, index));
+        }
     });
 
     return mainList;

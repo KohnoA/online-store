@@ -1,7 +1,7 @@
 import './summary.scss';
 import * as utils from '../../../utils/index';
 import { promoCodes, activePromoCodes } from '../../../constants/data/data';
-import { showPopUp } from '../cart-products/pagination';
+import { showPopUp } from '../../../components/popup/popup';
 
 export function createSummary(): HTMLElement {
     const summary = utils.createElement('section', 'summary');
