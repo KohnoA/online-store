@@ -5,6 +5,7 @@ import { Product, ArgsDecInc, ArgsCreateNumberControl } from 'constants/types/ty
 import { setProductImage } from '../../main/catalog/products';
 import { cartIsEmpty } from '../cart';
 import { recalculationTotalCash, clearPromoCodes } from '../summary/summary';
+import { limitItemsInPage } from './pagination';
 
 export function createCartProducts(from = 1, to = 3): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
@@ -141,6 +142,8 @@ function incNumberOfProduct(args: ArgsDecInc): void {
             if (!item.count || item.count <= 1) {
                 array.splice(index, 1);
                 card.remove();
+                const limitItemsInPageInstance = limitItemsInPage(0, true);
+                limitItemsInPageInstance();
             } else item.count -= 1;
         }
     });

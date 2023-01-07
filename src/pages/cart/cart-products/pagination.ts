@@ -37,7 +37,7 @@ export function createCartPagination(): HTMLElement {
     return headerList;
 }
 
-function limitItemsInPage(int?: number, canInitPage?: boolean): () => void {
+export function limitItemsInPage(int?: number, canInitPage?: boolean): () => void {
     return () => {
         if (canInitPage) {
             const currentPage = document.getElementById('current-page-cart') as HTMLElement;
