@@ -1,4 +1,6 @@
 import * as utils from '../../../utils/index';
+import { cartArray } from '../../../constants/data/data';
+import { createCartProducts } from './cart-products';
 
 export function createCartPagination(): HTMLElement {
     const headerList = utils.createElement('div', 'in-cart__header');
@@ -14,7 +16,9 @@ export function createCartPagination(): HTMLElement {
     limit.textContent = 'Limit:';
     limitInput.setAttribute('type', 'number');
     limitInput.id = 'limit-input';
-    limitInput.value = '1';
+    limitInput.value = '3';
+    limitInput.min = '1';
+    limitInput.max = String(cartArray.length);
     pages.textContent = 'Page: ';
     currentPage.textContent = '1';
     currentPage.id = 'current-page-cart';
@@ -25,5 +29,57 @@ export function createCartPagination(): HTMLElement {
     limit.append(limitInput);
     headerList.append(title, limit, pages);
 
+    pagePrev.addEventListener('click', prevPage);
+    pageNext.addEventListener('click', nextPage);
+    const limitItemsInPageInstance = limitItemsInPage(0, true);
+    limitInput.addEventListener('input', limitItemsInPageInstance);
+
     return headerList;
+}
+
+export function limitItemsInPage(int?: number, canInitPage?: boolean): () => void {
+    return () => {
+        if (canInitPage) {
+            const currentPage = document.getElementById('current-page-cart') as HTMLElement;
+            currentPage.textContent = '1';
+        }
+
+        const cartList = document.querySelector('.in-cart') as HTMLElement;
+        const mainList = document.querySelector('.in-cart__main') as HTMLElement;
+        const limitInput = document.getElementById('limit-input') as HTMLInputElement;
+        const value = Number(limitInput.value);
+
+        if (value && value > 0 && value <= cartArray.length) {
+            const from = int ? value * int - value + 1 : value - value;
+            const to = int ? value * int : value;
+
+            mainList.remove();
+            cartList.append(createCartProducts(from, to));
+        }
+    };
+}
+
+function nextPage(): void {
+    const currentPage = document.getElementById('current-page-cart') as HTMLElement;
+    const nextPageNumber = Number(currentPage.textContent) + 1;
+    const limitInput = document.getElementById('limit-input') as HTMLInputElement;
+    const value = Number(limitInput.value);
+    const maxPage = Math.ceil(cartArray.length / value);
+
+    if (nextPageNumber > maxPage) return;
+
+    currentPage.textContent = String(nextPageNumber);
+    const limitItemsInPageInstance = limitItemsInPage(nextPageNumber);
+    limitItemsInPageInstance();
+}
+
+function prevPage(): void {
+    const currentPage = document.getElementById('current-page-cart') as HTMLElement;
+    const prevPageNumber = Number(currentPage.textContent) - 1;
+
+    if (prevPageNumber < 1) return;
+
+    currentPage.textContent = String(prevPageNumber);
+    const limitItemsInPageInstance = limitItemsInPage(prevPageNumber);
+    limitItemsInPageInstance();
 }

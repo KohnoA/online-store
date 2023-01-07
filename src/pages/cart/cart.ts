@@ -1,8 +1,8 @@
 import './cart.scss';
 import * as utils from '../../utils/index';
 import { createCartProducts } from './cart-products/cart-products';
-import { createSummary } from './summary/summary';
-import { cartArray } from '../../constants/data/data';
+import { createSummary, reCreatePromoCode } from './summary/summary';
+import { cartArray, activePromoCodes } from '../../constants/data/data';
 import { createCartPagination } from './cart-products/pagination';
 
 export function createCart(): void {
@@ -23,9 +23,13 @@ export function createCart(): void {
     main.append(container);
 
     utils.setSumAndQuantityInCart(
-        document.querySelector('.summary__amount-int'),
-        document.querySelector('.summary__cash-int')
+        document.querySelector('.summary__cash-int'),
+        document.querySelector('.summary__amount-int')
     );
+
+    if (activePromoCodes.length) {
+        activePromoCodes.forEach((item) => reCreatePromoCode(item));
+    }
 }
 
 function createCartProductList(): HTMLElement {

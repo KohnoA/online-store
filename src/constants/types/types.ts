@@ -13,6 +13,11 @@ export interface Product {
     count?: number;
 }
 
+export interface PromoCodes {
+    RS: string;
+    EPM: string;
+}
+
 export type ArgsDecInc = [HTMLElement, HTMLElement, HTMLElement, Product, number];
 
 export type ArgsCreateNumberControl = [number, number, number, HTMLElement, number | undefined];

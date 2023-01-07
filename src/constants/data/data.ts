@@ -1,4 +1,4 @@
-import { Product } from 'constants/types/types';
+import { Product, PromoCodes } from 'constants/types/types';
 
 export const sortValues: Array<string> = [
     'default',
@@ -13,6 +13,13 @@ export const sortValues: Array<string> = [
 export const gridValues: Array<string> = ['3', '4'];
 
 export const cartArray: Array<Product> = [];
+
+export const activePromoCodes: Array<string> = [];
+
+export const promoCodes: PromoCodes = {
+    RS: 'Rolling Scopes School - 10%',
+    EPM: 'EPAM Systems - 10%',
+};
 
 export const enum Pages {
     main = '',
