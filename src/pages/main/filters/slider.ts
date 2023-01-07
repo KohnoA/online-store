@@ -31,6 +31,8 @@ function setValueInput(
     e: Event,
     category: string
 ) {
+    if (!(e.target as HTMLElement).closest('.aside-slider__input')) return;
+
     const [min, max] = getValueInput(inputMin, inputMax);
     // if (formControlMin.value === formControlMax.value) {
     //     const container = document.querySelector('.aside-control') as HTMLElement;
@@ -81,12 +83,12 @@ function coloredSlider(inputMin: HTMLInputElement, inputMax: HTMLInputElement, c
 
     slider.style.background = `linear-gradient(
         to right,
-        #f0dede 0%,
-        #f0dede ${(from / length) * 100}%,
-        #aaa ${(from / length) * 100}%,
-        #aaa ${(to / length) * 100}%,
-        #f0dede ${(to / length) * 100}%,
-        #f0dede 100%)`;
+        #f2f2f2 0%,
+        #f2f2f2 ${(from / length) * 100}%,
+        #c4bebe ${(from / length) * 100}%,
+        #c4bebe ${(to / length) * 100}%,
+        #f2f2f2 ${(to / length) * 100}%,
+        #f2f2f2 100%)`;
 }
 
 function createInputDualSlider(category: string, minMax: string, id: string) {
