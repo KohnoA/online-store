@@ -27,3 +27,7 @@ export function createCartPagination(): HTMLElement {
 
     return headerList;
 }
+
+export function showPopUp(): void {
+    console.log('popup!');
+}

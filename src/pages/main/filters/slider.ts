@@ -31,6 +31,8 @@ function setValueInput(
     e: Event,
     category: string
 ) {
+    if (!(e.target as HTMLElement).closest('.aside-slider__input')) return;
+
     const [min, max] = getValueInput(inputMin, inputMax);
     // if (formControlMin.value === formControlMax.value) {
     //     const container = document.querySelector('.aside-control') as HTMLElement;

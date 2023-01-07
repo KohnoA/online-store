@@ -4,6 +4,7 @@ import { cartArray } from '../../../constants/data/data';
 import { Product, ArgsDecInc, ArgsCreateNumberControl } from 'constants/types/types';
 import { setProductImage } from '../../main/catalog/products';
 import { cartIsEmpty } from '../cart';
+import { recalculationTotalCash, clearPromoCodes } from '../summary/summary';
 
 export function createCartProducts(): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
@@ -94,11 +95,14 @@ function decIncNumberOfProduct(originPrice: number, id: number, card: HTMLElemen
                 document.getElementById('count-purchases')
             );
             utils.setSumAndQuantityInCart(
-                document.querySelector('.summary__amount-int'),
-                document.querySelector('.summary__cash-int')
+                document.querySelector('.summary__cash-int'),
+                document.querySelector('.summary__amount-int')
             );
 
-            if (cartArray.length === 0) cartIsEmpty();
+            if (cartArray.length === 0) {
+                cartIsEmpty();
+                clearPromoCodes();
+            } else recalculationTotalCash();
         }
     };
 }
