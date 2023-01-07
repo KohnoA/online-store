@@ -88,8 +88,8 @@ function createProductsListElements(map: Map<string, number>) {
         const checkbox = func.createElement('input', 'aside-product-form__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
 
-        const a = func.createElement('a', 'aside-product-form__hash');
-        a.setAttribute('href', `${product[0]}`);
+        const a = func.createElement('a', 'aside-product-form__hash') as HTMLAnchorElement;
+        a.href = `${product[0]}`;
         a.textContent = product[0][0].toLocaleUpperCase() + product[0].slice(1);
 
         const span = func.createElement('span', 'aside-product-form__amount');
@@ -191,10 +191,18 @@ function filterArrOfProducts(e: Event) {
 function changeCheckboxes(e: Event) {
     const target = e.target as HTMLElement;
 
-    if (!target.closest('.aside-product-form__label')) return;
+    if (!target.closest('.aside-product-form__checkbox')) return;
 
-    console.log(target);
+    const label = target.parentElement as HTMLElement;
+    const text = (label.children[1].textContent as string).toLowerCase();
+
+    const container = label.parentElement as HTMLDivElement;
+    const form = container.parentElement as HTMLElement;
+    const li = form.parentElement as HTMLElement;
+    const category = (li.querySelector('.aside-product__text') as HTMLElement).textContent?.toLowerCase() as string;
+    console.log(text, category);
+    // func.setURLKey(category, text, '');
 }
 
-document.addEventListener('change', changeCheckboxes);
+document.addEventListener('click', changeCheckboxes, false);
 document.addEventListener('input', (e) => filterArrOfProducts(e));
