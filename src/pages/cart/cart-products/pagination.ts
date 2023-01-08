@@ -54,7 +54,7 @@ export function limitItemsInPage(int?: number): () => void {
     };
 }
 
-export function nextPage(): void {
+function nextPage(): void {
     const currentPage = document.getElementById('current-page-cart') as HTMLElement;
     const nextPageNumber = Number(currentPage.textContent) + 1;
     const limitInput = document.getElementById('limit-input') as HTMLInputElement;
@@ -77,4 +77,17 @@ export function prevPage(): void {
     currentPage.textContent = String(prevPageNumber);
     const limitItemsInPageInstance = limitItemsInPage(prevPageNumber);
     limitItemsInPageInstance();
+}
+
+export function recreateProductsInPage(): void {
+    const cartMain = document.querySelector('.in-cart__main') as HTMLElement;
+    const currentPage = document.getElementById('current-page-cart') as HTMLElement;
+    const currentPageNumber = Number(currentPage.textContent);
+
+    if (cartMain.innerHTML === '' && currentPageNumber !== 1) {
+        prevPage();
+    } else {
+        const limitItemsInPageInstance = limitItemsInPage(currentPageNumber);
+        limitItemsInPageInstance();
+    }
 }
