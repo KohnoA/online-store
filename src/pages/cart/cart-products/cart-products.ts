@@ -5,7 +5,7 @@ import { Product, ArgsDecInc, ArgsCreateNumberControl } from 'constants/types/ty
 import { setProductImage } from '../../main/catalog/products';
 import { cartIsEmpty } from '../cart';
 import { recalculationTotalCash, clearPromoCodes } from '../summary/summary';
-import { limitItemsInPage } from './pagination';
+import { prevPage, limitItemsInPage } from './pagination';
 
 export function createCartProducts(from = 1, to = 3): HTMLElement {
     const mainList = utils.createElement('div', 'in-cart__main');
@@ -136,14 +136,22 @@ function incNumberOfProduct(args: ArgsDecInc): void {
     const [card, countNode, priceNode, currentProduct, originPrice] = args;
     const resultCount = Number(countNode.textContent) - 1;
     const currentPrice = Number(priceNode.textContent?.slice(0, -1));
+    const cartMain = document.querySelector('.in-cart__main') as HTMLElement;
+    const currentPage = document.getElementById('current-page-cart') as HTMLElement;
+    const currentPageNumber = Number(currentPage.textContent);
 
     cartArray.forEach((item, index, array) => {
         if (item === currentProduct) {
             if (!item.count || item.count <= 1) {
                 array.splice(index, 1);
                 card.remove();
-                const limitItemsInPageInstance = limitItemsInPage(0, true);
-                limitItemsInPageInstance();
+
+                if (cartMain.innerHTML === '' && currentPageNumber !== 1) {
+                    prevPage();
+                } else {
+                    const limitItemsInPageInstance = limitItemsInPage(currentPageNumber);
+                    limitItemsInPageInstance();
+                }
             } else item.count -= 1;
         }
     });

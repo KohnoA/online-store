@@ -31,19 +31,14 @@ export function createCartPagination(): HTMLElement {
 
     pagePrev.addEventListener('click', prevPage);
     pageNext.addEventListener('click', nextPage);
-    const limitItemsInPageInstance = limitItemsInPage(0, true);
+    const limitItemsInPageInstance = limitItemsInPage();
     limitInput.addEventListener('input', limitItemsInPageInstance);
 
     return headerList;
 }
 
-export function limitItemsInPage(int?: number, canInitPage?: boolean): () => void {
+export function limitItemsInPage(int?: number): () => void {
     return () => {
-        if (canInitPage) {
-            const currentPage = document.getElementById('current-page-cart') as HTMLElement;
-            currentPage.textContent = '1';
-        }
-
         const cartList = document.querySelector('.in-cart') as HTMLElement;
         const mainList = document.querySelector('.in-cart__main') as HTMLElement;
         const limitInput = document.getElementById('limit-input') as HTMLInputElement;
@@ -59,7 +54,7 @@ export function limitItemsInPage(int?: number, canInitPage?: boolean): () => voi
     };
 }
 
-function nextPage(): void {
+export function nextPage(): void {
     const currentPage = document.getElementById('current-page-cart') as HTMLElement;
     const nextPageNumber = Number(currentPage.textContent) + 1;
     const limitInput = document.getElementById('limit-input') as HTMLInputElement;
@@ -73,7 +68,7 @@ function nextPage(): void {
     limitItemsInPageInstance();
 }
 
-function prevPage(): void {
+export function prevPage(): void {
     const currentPage = document.getElementById('current-page-cart') as HTMLElement;
     const prevPageNumber = Number(currentPage.textContent) - 1;
 

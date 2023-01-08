@@ -7,6 +7,9 @@ import { sortValues, cartArray } from '../../../constants/data/data';
 export function showProductsList(searchValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
+    // const response = await fetch('https://dummyjson.com/products?limit=100');
+    // const data = await response.json();
+    // let productList: Array<Product> = [...data.products];
     let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
