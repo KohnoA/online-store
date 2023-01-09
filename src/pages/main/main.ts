@@ -1,6 +1,6 @@
 import * as utils from '../../utils/index';
 import { createCatalog } from './catalog/catalog';
-import { createAsideBar, showAllFilters } from './filters/filters';
+import { createAsideBar, showAllFilters, filterArrOfProducts, changesFilters } from './filters/filters';
 import { showProductsList } from './catalog/products';
 
 export function createFilterPage() {
@@ -16,3 +16,7 @@ export function createFilterPage() {
 }
 
 document.addEventListener('click', (e) => showAllFilters(e));
+document.addEventListener('input', (e) => filterArrOfProducts(e));
+document.addEventListener('input', changesFilters);
+window.addEventListener('popstate', () => showProductsList());
+document.addEventListener('click', (e) => utils.setFiltersToLocalStorage(e));

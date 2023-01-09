@@ -3,16 +3,17 @@ import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
+import { getProductsByValues } from '../../../utils/index';
+import { isCheck } from '../filters/filters';
 
-export function showProductsList(searchValue?: string, sortBy?: string): void {
+export function showProductsList(): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
     let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
 
-    if (searchValue) productList = getProductsBySearchInput(productList, searchValue);
-    if (sortBy && sortBy !== 'default') productList = sortProductsArray(productList, sortBy);
+    productList = catalogHeaderEvents(productList);
 
     if (productList.length === 0) {
         noProductsFound.textContent = 'No products found :(';
@@ -131,6 +132,9 @@ function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Pro
 
 function getProductsBySearchInput(originArr: Array<Product>, searchValue: string): Array<Product> {
     const ignoredKeys = ['id', 'thumbnail', 'images'];
+
+    if (!searchValue) return originArr;
+
     searchValue = searchValue.trim().toLowerCase();
 
     return originArr.filter((item) => {
@@ -142,4 +146,20 @@ function getProductsBySearchInput(originArr: Array<Product>, searchValue: string
             }
         }
     });
+}
+
+function catalogHeaderEvents(arr: Array<Product>) {
+    let result = [...arr];
+
+    const searchInput = document.getElementById('search-product') as HTMLInputElement;
+    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
+    const objectURL = utils.getURLStringAsObj();
+    isCheck(objectURL);
+
+    result = getProductsByValues(
+        getProductsBySearchInput(sortProductsArray(result, sortValues[selectSortBy.selectedIndex]), searchInput.value),
+        objectURL
+    );
+
+    return result;
 }

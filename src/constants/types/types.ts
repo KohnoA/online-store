@@ -16,3 +16,13 @@ export interface Product {
 export type ArgsDecInc = [HTMLElement, HTMLElement, HTMLElement, Product, number];
 
 export type ArgsCreateNumberControl = [number, number, number, HTMLElement, number | undefined];
+
+export interface URL {
+    brand: string[];
+    category: string[];
+    price: string[];
+    search: string[];
+    show: boolean;
+    sort: string;
+    stock: string[];
+}

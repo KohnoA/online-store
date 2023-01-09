@@ -1,7 +1,6 @@
 import './catalog.scss';
 import * as utils from '../../../utils/index';
 import { sortValues, gridValues } from '../../../constants/data/data';
-import { showProductsList } from './products';
 
 export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
@@ -30,14 +29,16 @@ function createCatalogHeader(): HTMLElement {
 
 function createSortSelection(): HTMLElement {
     const container = utils.createElement('div', 'catalog__sort');
-    const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection');
+    const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection') as HTMLSelectElement;
     const sortDescription = utils.createElement('span', 'catalog__sort-description');
 
     utils.createSelectOptions(sortValues, sortSelection);
 
     sortDescription.textContent = 'Sort by ';
 
-    sortSelection.addEventListener('change', catalogHeaderEvents);
+    sortSelection.addEventListener('change', () =>
+        utils.setURLKey('sort', sortValues[sortSelection.selectedIndex], 'default')
+    );
 
     container.append(sortDescription, sortSelection);
 
@@ -57,13 +58,13 @@ function createNumberOfProducts(): HTMLElement {
 }
 
 function createSearchProduct(): HTMLElement {
-    const input = utils.createElement('input', 'catalog__search-product');
+    const input = utils.createElement('input', 'catalog__search-product') as HTMLInputElement;
 
     input.setAttribute('id', 'search-product');
     input.setAttribute('placeholder', 'Search product');
     input.setAttribute('type', 'text');
 
-    input.addEventListener('input', catalogHeaderEvents);
+    input.addEventListener('input', () => utils.setURLKey('search', input.value, ''));
 
     return input;
 }
@@ -102,14 +103,4 @@ function setGridSelection(event: Event): void {
 
         utils.setURLKey('show', String(!!currentValue), 'false');
     }
-}
-
-function catalogHeaderEvents(): void {
-    const searchInput = document.getElementById('search-product') as HTMLInputElement;
-    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
-
-    showProductsList(searchInput.value, sortValues[selectSortBy.selectedIndex]);
-
-    utils.setURLKey('sort', sortValues[selectSortBy.selectedIndex], 'default');
-    utils.setURLKey('search', searchInput.value, '');
 }

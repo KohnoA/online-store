@@ -33,6 +33,21 @@
     }
 }
 
+.aside-container-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+
+    .aside-container-btn {
+        background-color: transparent;
+        border: 1px solid black;
+        border-radius: 3px;
+        padding: 1px 6px;
+        line-height: 120%;
+        font-size: 0.95rem;
+    }
+}
+
 .aside-list {
 
     .aside-list__item {

@@ -1,11 +1,13 @@
 import productsJson from '../../../constants/products.json';
 import languageJson from '../../../constants/language.json';
 import * as func from '../../../utils/index';
-import { Product } from 'constants/types/types';
-import { createPriceAndStockSlider } from './slider';
+import { Product, URL } from 'constants/types/types';
+import { createPriceAndStockSlider, coloredSlider } from './slider';
+import { showProductsList } from '../catalog/products';
 import './filters.scss';
 
-const asideBar = ['Category', 'Brand', 'Price', 'Stock'];
+const checkboxes = ['Category', 'Brand'];
+const sliders = ['Price', 'Stock'];
 
 export function createAsideBar() {
     const aside = func.createElement('aside', 'aside');
@@ -14,18 +16,41 @@ export function createAsideBar() {
     const h1 = func.createElement('h1', 'aside__title');
     h1.textContent = 'Filters';
 
-    const ul = createFilters();
+    const containerBtn = createButtons();
+
+    const ul = func.createElement('ul', 'aside-list');
+    createFilters(ul);
+
     ul.addEventListener('click', showFilters);
 
-    container.append(h1, ul);
+    container.append(h1, containerBtn, ul);
     aside.append(container);
     return aside;
 }
 
-function createFilters() {
-    const ul = func.createElement('ul', 'aside-list');
+function createButtons() {
+    const container = func.createElement('div', 'aside-container-btn');
 
-    asideBar.forEach((category) => {
+    const btnAmount = 2;
+    const classes = ['reset', 'copy'];
+
+    for (let i = 0; i < btnAmount; i++) {
+        const btn = func.createElement('button', 'aside-container-btn', `aside__${classes[i]}`);
+        btn.textContent = classes[i][0].toUpperCase() + classes[i].slice(1);
+        container.append(btn);
+    }
+
+    return container;
+}
+
+function createFilters(ul: HTMLElement) {
+    createCheckboxes(ul);
+    createSliders(ul);
+    return ul;
+}
+
+function createCheckboxes(ul: HTMLElement) {
+    checkboxes.forEach((category) => {
         const li = func.createElement('li', 'aside-list__item', 'aside-product');
         const productsList = createProductsList(category);
 
@@ -34,11 +59,26 @@ function createFilters() {
         const spanText = func.createElement('span', 'aside-product__text');
         spanText.textContent = category;
 
-        if (category !== 'Price' && category !== 'Stock') {
-            div.append(spanText, func.createElement('span', 'aside-product__img', 'aside-product__img_no-active'));
-        } else {
-            div.append(spanText);
-        }
+        div.append(spanText, func.createElement('span', 'aside-product__img', 'aside-product__img_no-active'));
+
+        li.append(div, productsList);
+        ul.append(li);
+    });
+
+    return ul;
+}
+
+function createSliders(ul: HTMLElement) {
+    sliders.forEach((category) => {
+        const li = func.createElement('li', 'aside-list__item', 'aside-product');
+        const productsList = createProductsList(category);
+
+        const div = func.createElement('div', 'aside-product-container');
+
+        const spanText = func.createElement('span', 'aside-product__text');
+        spanText.textContent = category;
+
+        div.append(spanText);
 
         li.append(div, productsList);
         ul.append(li);
@@ -65,7 +105,12 @@ function createProductsList(category: string, filtersContainer?: HTMLElement) {
         form = func.createElement('form', 'aside-product-form');
     }
 
-    const containerElements = createProductsListElements(categoryArr);
+    const containerElements = func.createElement(
+        'div',
+        'aside-product-form-container',
+        'aside-product-form-container_hidden'
+    );
+    createProductsListElements(categoryArr, containerElements);
 
     if (category === 'Price' || category === 'Stock') {
         createPriceAndStockSlider(form, category.toLowerCase());
@@ -78,8 +123,7 @@ function createProductsList(category: string, filtersContainer?: HTMLElement) {
     return form;
 }
 
-function createProductsListElements(map: Map<string, number>) {
-    const container = func.createElement('div', 'aside-product-form-container', 'aside-product-form-container_hidden');
+function createProductsListElements(map: Map<string, number>, container: HTMLElement, objectURL?: URL, category?) {
     container.innerHTML = '';
 
     for (const product of map) {
@@ -87,6 +131,7 @@ function createProductsListElements(map: Map<string, number>) {
 
         const checkbox = func.createElement('input', 'aside-product-form__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
+        if (objectURL && objectURL[category] !== null) setCheckedToCheckbox(objectURL, category, checkbox, product);
 
         const a = func.createElement('a', 'aside-product-form__hash') as HTMLAnchorElement;
         a.href = `${product[0]}`;
@@ -100,6 +145,12 @@ function createProductsListElements(map: Map<string, number>) {
     }
 
     return container;
+}
+
+function setCheckedToCheckbox(objectURL: URL, category: string, checkbox: HTMLInputElement, value: [string, number]) {
+    objectURL[category].forEach((elem: string) => {
+        if (elem === value[0].toLowerCase()) checkbox.setAttribute('checked', 'true');
+    });
 }
 
 function createArrOfProducts(products: Product[], category: string) {
@@ -122,8 +173,6 @@ function createArrOfProducts(products: Product[], category: string) {
 function showFilters(e: Event) {
     const target = e.target as HTMLElement;
 
-    if (target.closest('.aside-product-form')) setUrlHash(e);
-
     if (!target.closest('.aside-product-container')) return;
 
     const currentTarget = target.closest('.aside-product') as HTMLDivElement;
@@ -136,28 +185,17 @@ function showFilters(e: Event) {
     form.classList.toggle('aside-product-form_hidden');
 }
 
-function setUrlHash(e: Event) {
-    const currentTarget = (e.target as HTMLElement).closest('.aside-product-form__label');
-
-    if (!currentTarget) return;
-
-    const a = currentTarget.querySelector('.aside-product-form__hash') as HTMLLinkElement;
-    const hash = a.getAttribute('href') as string;
-    window.location.hash = hash;
-    return hash;
-}
-
 export function showAllFilters(e: Event) {
     const target = e.target as HTMLElement;
 
     if (!target.closest('.aside-product-form__button')) return;
     e.preventDefault();
-
     const form = target.parentElement as HTMLElement;
-    const input = form.querySelector('.aside-product-form__search') as HTMLElement;
+    const input = form.querySelector('.aside-product-form__search') as HTMLInputElement;
     const containerElements = form.querySelector('.aside-product-form-container') as HTMLDivElement;
 
     input.classList.toggle('aside-product-form_hidden');
+    input.value = '';
     const textBtn =
         target.textContent === languageJson['ru']['button-hiddenAll']
             ? languageJson['ru']['button-showAll']
@@ -167,7 +205,7 @@ export function showAllFilters(e: Event) {
     containerElements.classList.toggle('aside-product-form-container_hidden');
 }
 
-function filterArrOfProducts(e: Event) {
+export function filterArrOfProducts(e: Event) {
     const target = e.target as HTMLInputElement;
 
     if (!target.closest('.aside-product-form__search')) return;
@@ -181,7 +219,8 @@ function filterArrOfProducts(e: Event) {
     const value = target.value.trim().toLowerCase();
     const map = Object(arr.filter((item) => item[0].startsWith(value)));
 
-    const container = createProductsListElements(map);
+    const div = document.querySelector('.aside-product-form-container') as HTMLElement;
+    const container = createProductsListElements(map, div);
     container.classList.remove('aside-product-form-container_hidden');
     container.children.length
         ? (form.children[1].innerHTML = container.innerHTML)
@@ -194,15 +233,86 @@ function changeCheckboxes(e: Event) {
     if (!target.closest('.aside-product-form__checkbox')) return;
 
     const label = target.parentElement as HTMLElement;
-    const text = (label.children[1].textContent as string).toLowerCase();
+    const value = (label.children[1].textContent as string).toLowerCase();
 
     const container = label.parentElement as HTMLDivElement;
     const form = container.parentElement as HTMLElement;
     const li = form.parentElement as HTMLElement;
     const category = (li.querySelector('.aside-product__text') as HTMLElement).textContent?.toLowerCase() as string;
-    console.log(text, category);
-    // func.setURLKey(category, text, '');
+
+    setURLFiltersKey(category, value);
 }
 
-document.addEventListener('click', changeCheckboxes, false);
-document.addEventListener('input', (e) => filterArrOfProducts(e));
+function setURLFiltersKey(category: string, value: string): void {
+    const url = new URL(window.location.href);
+
+    if (!url.search) {
+        url.searchParams.set(category, value);
+    } else if (url.searchParams.has(category) && url.searchParams.get(category)?.includes(value)) {
+        const arr: string[] = (url.searchParams.get(category) as string).split('↕');
+        const URL = arr.filter((item) => item !== value);
+        URL.length ? url.searchParams.set(category, `${URL.join('↕')}`) : url.searchParams.delete(category);
+    } else if (url.searchParams.has(category) && !url.searchParams.get(category)?.includes(value)) {
+        url.searchParams.set(category, `${url.searchParams.get(category) as string}↕${value}`);
+    } else {
+        url.searchParams.append(category, value);
+    }
+
+    window.history.pushState(null, '', url);
+
+    showProductsList();
+}
+
+function changeDualInput(e: Event) {
+    const target = e.target as HTMLInputElement;
+
+    if (!target.closest('.aside-slider')) return;
+
+    const container = target.parentElement as HTMLElement;
+    const minInput = container.children[0] as HTMLInputElement;
+    const maxInput = container.children[1] as HTMLInputElement;
+
+    func.setURLKey(container.id, `${minInput.value}↕${maxInput.value}`, '');
+}
+
+export function changesFilters(e: Event) {
+    const target = e.target as HTMLInputElement;
+
+    if (target.closest('.aside-slider')) changeDualInput(e);
+
+    if (target.closest('.aside-product-form__checkbox')) changeCheckboxes(e);
+}
+
+export function isCheck(objectURL: URL) {
+    for (let i = checkboxes.length - 1; i >= 0; i--) {
+        const containers = document.querySelectorAll('.aside-product-form-container') as NodeListOf<HTMLElement>;
+        containers[i].innerHTML = '';
+
+        const categoryArr = createArrOfProducts(productsJson.products, checkboxes[i].toLowerCase());
+
+        createProductsListElements(categoryArr, containers[i], objectURL, checkboxes[i].toLowerCase());
+        setValueToDualSlider(objectURL);
+    }
+}
+
+function setValueToDualSlider(objectURL: URL) {
+    const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
+
+    sliders.forEach((category, i) => {
+        const min = Math.min(...objectURL[category.toLocaleLowerCase()].map((item) => Number(item)));
+        const max = Math.max(...objectURL[category.toLocaleLowerCase()].map((item) => Number(item)));
+
+        const minInput = blocks[i].querySelector(`#inputMin${category.toLowerCase()}`) as HTMLInputElement;
+        const maxInput = blocks[i].querySelector(`#inputMax${category.toLowerCase()}`) as HTMLInputElement;
+        const form = blocks[i].parentElement as HTMLFormElement;
+        const formControlMin = form.querySelector('.aside-slider-control__num_min') as HTMLInputElement;
+        const formControlMax = form.querySelector('.aside-slider-control__num_max') as HTMLInputElement;
+
+        coloredSlider(minInput, maxInput, category.toLowerCase());
+
+        minInput.value = `${min}`;
+        formControlMin.value = `${min}`;
+        maxInput.value = `${max}`;
+        formControlMax.value = `${max}`;
+    });
+}
