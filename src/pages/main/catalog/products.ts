@@ -7,10 +7,13 @@ import { getProductsByValues } from '../../../utils/index';
 import { isCheck } from '../filters/filters';
 import { setGridSelection } from './catalog';
 
-export function showProductsList(): void {
+export async function showProductsList(searchValue?: string, sortBy?: string): Promise<void> {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
-    let productList: Array<Product> = [...products.products];
+    const response = await fetch('https://dummyjson.com/products?limit=100');
+    const data = await response.json();
+    let productList: Array<Product> = [...data.products];
+    // let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
 
@@ -23,10 +26,17 @@ export function showProductsList(): void {
         productList.forEach((item) => {
             const productNode = createProductCard(item);
 
-            if (cartArray.includes(item)) {
-                const productButton = productNode.querySelector('.product__button') as HTMLElement;
-                setButtonInCart(productButton);
-            }
+            // if (cartArray.includes(item)) {
+            //     const productButton = productNode.querySelector('.product__button') as HTMLElement;
+            //     setButtonInCart(productButton);
+            // }
+
+            cartArray.forEach((cartItem) => {
+                if (cartItem.id === item.id) {
+                    const productButton = productNode.querySelector('.product__button') as HTMLElement;
+                    setButtonInCart(productButton);
+                }
+            });
 
             catalogMain?.append(productNode);
         });
