@@ -37,7 +37,7 @@ function createSortSelection(): HTMLElement {
     sortDescription.textContent = 'Sort by ';
 
     sortSelection.addEventListener('change', () =>
-        utils.setURLKey('sort', sortValues[sortSelection.selectedIndex], 'default')
+        utils.setURLKey('sort', String(sortValues.indexOf(sortValues[sortSelection.selectedIndex])), 'default')
     );
 
     container.append(sortDescription, sortSelection);
@@ -72,7 +72,7 @@ function createSearchProduct(): HTMLElement {
 function createSelectGrid(): HTMLElement {
     const container = utils.createElement('div', 'catalog__grid');
     const gridDescription = utils.createElement('span', 'catalog__grid-Description');
-    const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection');
+    const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection') as HTMLSelectElement;
 
     utils.createSelectOptions(gridValues, gridSelection);
 
@@ -81,26 +81,26 @@ function createSelectGrid(): HTMLElement {
     container.append(gridDescription);
     container.append(gridSelection);
 
-    gridSelection.addEventListener('change', setGridSelection);
+    gridSelection.addEventListener('change', () =>
+        utils.setURLKey('show', String(!!gridSelection.selectedIndex), 'false')
+    );
 
     return container;
 }
 
-function setGridSelection(event: Event): void {
+export function setGridSelection(value: string) {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
-    const select = event.target;
+    const select = document.querySelector('.catalog__grid-selection') as HTMLSelectElement;
 
-    if (select && select instanceof HTMLSelectElement) {
-        const currentValue = select.selectedIndex;
+    if (select) {
+        value === 'true' ? (select.selectedIndex = 1) : (select.selectedIndex = 0);
 
-        if (gridValues[currentValue] === '3') {
+        if (value === 'false') {
             catalogMain.classList.remove('catalog__main_four-columns');
             catalogMain.classList.add('catalog__main_three-columns');
-        } else if (gridValues[currentValue] === '4') {
+        } else if (value === 'true') {
             catalogMain.classList.add('catalog__main_four-columns');
             catalogMain.classList.remove('catalog__main_three-columns');
         }
-
-        utils.setURLKey('show', String(!!currentValue), 'false');
     }
 }

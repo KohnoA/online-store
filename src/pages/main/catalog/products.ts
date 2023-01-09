@@ -5,6 +5,7 @@ import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
 import { getProductsByValues } from '../../../utils/index';
 import { isCheck } from '../filters/filters';
+import { setGridSelection } from './catalog';
 
 export function showProductsList(): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
@@ -150,15 +151,24 @@ function getProductsBySearchInput(originArr: Array<Product>, searchValue: string
 
 function catalogHeaderEvents(arr: Array<Product>) {
     let result = [...arr];
+    const objectURL = utils.getURLStringAsObj();
 
     const searchInput = document.getElementById('search-product') as HTMLInputElement;
+    objectURL.search ? (searchInput.value = objectURL.search.join('')) : (searchInput.value = '');
+
     const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
-    const objectURL = utils.getURLStringAsObj();
+    selectSortBy.selectedIndex = Number(objectURL.sort);
+
+    setGridSelection(objectURL.show);
+    // const showInput = document.querySelector('.catalog__grid-selection') as HTMLSelectElement;
+    // const valueShowInput = !!objectURL.search;
+    // valueShowInput ? (showInput.selectedIndex = 1) : (showInput.selectedIndex = 0);
+
     isCheck(objectURL);
 
-    result = getProductsByValues(
-        getProductsBySearchInput(sortProductsArray(result, sortValues[selectSortBy.selectedIndex]), searchInput.value),
-        objectURL
+    result = sortProductsArray(
+        getProductsBySearchInput(getProductsByValues(result, objectURL), searchInput.value),
+        sortValues[selectSortBy.selectedIndex]
     );
 
     return result;

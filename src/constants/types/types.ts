@@ -22,7 +22,7 @@ export interface URL {
     category: string[];
     price: string[];
     search: string[];
-    show: boolean;
+    show: string;
     sort: string;
     stock: string[];
 }

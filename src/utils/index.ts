@@ -28,7 +28,7 @@ export function createSelectOptions(arrValues: Array<string>, instert: HTMLEleme
     });
 }
 
-export function setURLKey(name: string, value: string, valueToDelete: string): void {
+export function setURLKey(name: string, value: string, valueToDelete: string) {
     const url = new URL(window.location.href);
 
     if (value !== valueToDelete) {
@@ -88,7 +88,7 @@ export function getURLStringAsObj() {
 
     const URLKeys = categories.reduce((acc, curr) => {
         if (curr === 'show') acc[curr] = url.searchParams.get(curr) || 'false';
-        else if (curr === 'sort') acc[curr] = url.searchParams.get(curr) || 'default';
+        else if (curr === 'sort') acc[curr] = url.searchParams.get(curr) || '0';
         else if (curr === 'price')
             acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : ['10', '1749'];
         else if (curr === 'stock')
