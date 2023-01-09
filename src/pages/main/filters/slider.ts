@@ -4,6 +4,7 @@ import { Product } from 'constants/types/types';
 
 export function createPriceAndStockSlider(form: HTMLElement, category: string) {
     const slidersControl = func.createElement('div', 'aside-product-form-slider', 'aside-slider');
+    slidersControl.id = category;
 
     const formControl = func.createElement('div', 'aside-product-form-control', 'aside-control');
     const inputMin = createInputDualSlider(category, 'min', `inputMin${category}`);
@@ -19,7 +20,7 @@ export function createPriceAndStockSlider(form: HTMLElement, category: string) {
 
     form.append(formControl, slidersControl);
     window.addEventListener('input', (e) =>
-        setValueInput(inputMin, formControlMin, inputMax, formControlMax, e, category)
+        setValueInput(inputMin, formControlMin, inputMax, formControlMax, category, e)
     );
 }
 
@@ -28,16 +29,14 @@ function setValueInput(
     formControlMin: HTMLInputElement,
     inputMax: HTMLInputElement,
     formControlMax: HTMLInputElement,
+    category: string,
     e: Event,
-    category: string
+    minMax?: string[]
 ) {
     if (!(e.target as HTMLElement).closest('.aside-slider__input')) return;
 
-    const [min, max] = getValueInput(inputMin, inputMax);
-    // if (formControlMin.value === formControlMax.value) {
-    //     const container = document.querySelector('.aside-control') as HTMLElement;
-    //     container.innerHTML = '';
-    // }
+    const [min, max] = !minMax ? getValueInput(inputMin, inputMax) : minMax;
+
     if (Number(min) <= Number(max)) {
         formControlMin.value = min;
         inputMin.setAttribute('value', min);
@@ -70,7 +69,7 @@ function setZIndex(e: Event, inputMin: HTMLInputElement, inputMax: HTMLInputElem
     }
 }
 
-function coloredSlider(inputMin: HTMLInputElement, inputMax: HTMLInputElement, category: string) {
+export function coloredSlider(inputMin: HTMLInputElement, inputMax: HTMLInputElement, category: string) {
     const min = Number(inputMin.min);
     const max = Number(inputMin.max);
     const length = max - min;

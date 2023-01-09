@@ -3,6 +3,9 @@ import { Product } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
+import { getProductsByValues } from '../../../utils/index';
+import { isCheck } from '../filters/filters';
+import { setGridSelection } from './catalog';
 
 export async function showProductsList(searchValue?: string, sortBy?: string): Promise<void> {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
@@ -14,8 +17,7 @@ export async function showProductsList(searchValue?: string, sortBy?: string): P
 
     catalogMain.innerHTML = '';
 
-    if (searchValue) productList = getProductsBySearchInput(productList, searchValue);
-    if (sortBy && sortBy !== 'default') productList = sortProductsArray(productList, sortBy);
+    productList = catalogHeaderEvents(productList);
 
     if (productList.length === 0) {
         noProductsFound.textContent = 'No products found :(';
@@ -141,6 +143,9 @@ function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Pro
 
 function getProductsBySearchInput(originArr: Array<Product>, searchValue: string): Array<Product> {
     const ignoredKeys = ['id', 'thumbnail', 'images'];
+
+    if (!searchValue) return originArr;
+
     searchValue = searchValue.trim().toLowerCase();
 
     return originArr.filter((item) => {
@@ -152,4 +157,25 @@ function getProductsBySearchInput(originArr: Array<Product>, searchValue: string
             }
         }
     });
+}
+
+function catalogHeaderEvents(arr: Array<Product>) {
+    let result = [...arr];
+    const objectURL = utils.getURLStringAsObj();
+
+    const searchInput = document.getElementById('search-product') as HTMLInputElement;
+    objectURL.search ? (searchInput.value = objectURL.search.join('')) : (searchInput.value = '');
+
+    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
+    selectSortBy.selectedIndex = Number(objectURL.sort);
+
+    setGridSelection(objectURL.show);
+    isCheck(objectURL);
+
+    result = sortProductsArray(
+        getProductsBySearchInput(getProductsByValues(result, objectURL), searchInput.value),
+        sortValues[selectSortBy.selectedIndex]
+    );
+
+    return result;
 }

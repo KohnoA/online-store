@@ -1,7 +1,6 @@
 import './catalog.scss';
 import * as utils from '../../../utils/index';
 import { sortValues, gridValues } from '../../../constants/data/data';
-import { showProductsList } from './products';
 
 export function createCatalog(): HTMLElement {
     const catalog = utils.createElement('section', 'catalog');
@@ -30,14 +29,16 @@ function createCatalogHeader(): HTMLElement {
 
 function createSortSelection(): HTMLElement {
     const container = utils.createElement('div', 'catalog__sort');
-    const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection');
+    const sortSelection = utils.createElement('select', 'catalog__sort-selection', 'selection') as HTMLSelectElement;
     const sortDescription = utils.createElement('span', 'catalog__sort-description');
 
     utils.createSelectOptions(sortValues, sortSelection);
 
     sortDescription.textContent = 'Sort by ';
 
-    sortSelection.addEventListener('change', catalogHeaderEvents);
+    sortSelection.addEventListener('change', () =>
+        utils.setURLKey('sort', String(sortValues.indexOf(sortValues[sortSelection.selectedIndex])), 'default')
+    );
 
     container.append(sortDescription, sortSelection);
 
@@ -57,13 +58,13 @@ function createNumberOfProducts(): HTMLElement {
 }
 
 function createSearchProduct(): HTMLElement {
-    const input = utils.createElement('input', 'catalog__search-product');
+    const input = utils.createElement('input', 'catalog__search-product') as HTMLInputElement;
 
     input.setAttribute('id', 'search-product');
     input.setAttribute('placeholder', 'Search product');
     input.setAttribute('type', 'text');
 
-    input.addEventListener('input', catalogHeaderEvents);
+    input.addEventListener('input', () => utils.setURLKey('search', input.value, ''));
 
     return input;
 }
@@ -71,7 +72,7 @@ function createSearchProduct(): HTMLElement {
 function createSelectGrid(): HTMLElement {
     const container = utils.createElement('div', 'catalog__grid');
     const gridDescription = utils.createElement('span', 'catalog__grid-Description');
-    const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection');
+    const gridSelection = utils.createElement('select', 'catalog__grid-selection', 'selection') as HTMLSelectElement;
 
     utils.createSelectOptions(gridValues, gridSelection);
 
@@ -80,36 +81,26 @@ function createSelectGrid(): HTMLElement {
     container.append(gridDescription);
     container.append(gridSelection);
 
-    gridSelection.addEventListener('change', setGridSelection);
+    gridSelection.addEventListener('change', () =>
+        utils.setURLKey('show', String(!!gridSelection.selectedIndex), 'false')
+    );
 
     return container;
 }
 
-function setGridSelection(event: Event): void {
+export function setGridSelection(value: string) {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
-    const select = event.target;
+    const select = document.querySelector('.catalog__grid-selection') as HTMLSelectElement;
 
-    if (select && select instanceof HTMLSelectElement) {
-        const currentValue = select.selectedIndex;
+    if (select) {
+        value === 'true' ? (select.selectedIndex = 1) : (select.selectedIndex = 0);
 
-        if (gridValues[currentValue] === '3') {
+        if (value === 'false') {
             catalogMain.classList.remove('catalog__main_four-columns');
             catalogMain.classList.add('catalog__main_three-columns');
-        } else if (gridValues[currentValue] === '4') {
+        } else if (value === 'true') {
             catalogMain.classList.add('catalog__main_four-columns');
             catalogMain.classList.remove('catalog__main_three-columns');
         }
-
-        utils.setURLKey('show', String(!!currentValue), 'false');
     }
-}
-
-function catalogHeaderEvents(): void {
-    const searchInput = document.getElementById('search-product') as HTMLInputElement;
-    const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
-
-    showProductsList(searchInput.value, sortValues[selectSortBy.selectedIndex]);
-
-    utils.setURLKey('sort', sortValues[selectSortBy.selectedIndex], 'default');
-    utils.setURLKey('search', searchInput.value, '');
 }

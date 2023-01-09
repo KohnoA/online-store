@@ -1,5 +1,9 @@
 import { routing } from '../pages/app/createApp';
 import { Pages, cartArray } from '../constants/data/data';
+import { showProductsList } from '../pages/main/catalog/products';
+import { Product, URL } from 'constants/types/types';
+
+const categories = ['category', 'brand', 'price', 'stock', 'sort', 'search', 'show'];
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -24,7 +28,7 @@ export function createSelectOptions(arrValues: Array<string>, instert: HTMLEleme
     });
 }
 
-export function setURLKey(name: string, value: string, valueToDelete: string): void {
+export function setURLKey(name: string, value: string, valueToDelete: string) {
     const url = new URL(window.location.href);
 
     if (value !== valueToDelete) {
@@ -34,6 +38,8 @@ export function setURLKey(name: string, value: string, valueToDelete: string): v
     }
 
     window.history.pushState(null, '', url);
+
+    showProductsList();
 }
 
 export function switchOnProductPage(event: Event): void {
@@ -75,4 +81,93 @@ export function setSumAndQuantityInCart<T>(cashNode: T, quantityNode: T): void {
             else return acc + next.price;
         }, 0)
     );
+}
+
+export function getURLStringAsObj() {
+    const url = new URL(window.location.href);
+
+    const URLKeys = categories.reduce((acc, curr) => {
+        if (curr === 'show') acc[curr] = url.searchParams.get(curr) || 'false';
+        else if (curr === 'sort') acc[curr] = url.searchParams.get(curr) || '0';
+        else if (curr === 'price')
+            acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : ['10', '1749'];
+        else if (curr === 'stock')
+            acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : ['2', '150'];
+        else acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : null;
+        return acc;
+    }, {});
+
+    return URLKeys as URL;
+}
+
+export function setFiltersToLocalStorage(e: Event) {
+    const target = e.target as HTMLElement;
+
+    if (target !== document.querySelector('.aside__copy')) return;
+
+    // const objectURL = getURLStringAsObj();
+
+    // for (const key in objectURL) {
+    //     if (objectURL[key] !== null) {
+    //         localStorage.setItem(key, JSON.stringify(objectURL[key]));
+    //     }
+    // }
+
+    const text = target.textContent;
+    const width = getComputedStyle(target).width;
+    target.style.width = `${width}`;
+    target.textContent = 'Copied!';
+
+    setTimeout(() => {
+        target.style.width = '';
+        target.textContent = text;
+    }, 1000);
+
+    const url = window.location.href;
+    localStorage.setItem('url', url);
+}
+
+export function getProductsByValues(arr: Array<Product>, objectURL: URL) {
+    return sortPriceAndStockValue(selectCategoryAndBrand(arr, objectURL), objectURL);
+}
+
+function sortPriceAndStockValue(arr: Array<Product>, objectURL: URL) {
+    const productsArr = [...arr];
+    const price = objectURL['price'].map((item) => Number(item));
+    const stock = objectURL['stock'].map((item) => Number(item));
+
+    return productsArr.filter((product) => {
+        if (product.price >= price[0] && product.price <= price[1]) {
+            if (product.stock >= stock[0] && product.stock <= stock[1]) return product;
+        }
+    });
+}
+
+function selectCategoryAndBrand(arr: Array<Product>, objectURL: URL) {
+    const categories = objectURL['category'];
+    const brands = objectURL['brand'];
+    const productsArr = [...arr];
+
+    if (categories && !brands) return myFilter(productsArr, categories, 'category');
+    else if (!categories && brands) return myFilter(productsArr, brands, 'brand');
+    else if (categories && brands) return myFilter(myFilter(productsArr, brands, 'brand'), categories, 'category');
+    else return productsArr;
+}
+
+function myFilter(productsArr: Product[], categories: string[], category: string) {
+    return productsArr.filter((product) => {
+        if (categories && categories.includes(product[category].toLowerCase())) return product;
+    });
+}
+
+export function beforeLoad() {
+    const urlLocalStorage = localStorage.getItem('url');
+    if (urlLocalStorage) {
+        const currURL = urlLocalStorage.split('%E2%86%95').join('↕');
+        const windowURL = window.location.search.split('%E2%86%95').join('↕');
+
+        const url = new URL(currURL);
+
+        if (currURL !== windowURL) window.history.pushState(null, '', url);
+    }
 }
