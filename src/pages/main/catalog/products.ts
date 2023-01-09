@@ -7,13 +7,10 @@ import { getProductsByValues } from '../../../utils/index';
 import { isCheck } from '../filters/filters';
 import { setGridSelection } from './catalog';
 
-export async function showProductsList(searchValue?: string, sortBy?: string): Promise<void> {
+export function showProductsList(searchValue?: string, sortBy?: string): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
-    const response = await fetch('https://dummyjson.com/products?limit=100');
-    const data = await response.json();
-    let productList: Array<Product> = [...data.products];
-    // let productList: Array<Product> = [...products.products];
+    let productList: Array<Product> = [...products.products];
 
     catalogMain.innerHTML = '';
 
@@ -26,17 +23,10 @@ export async function showProductsList(searchValue?: string, sortBy?: string): P
         productList.forEach((item) => {
             const productNode = createProductCard(item);
 
-            // if (cartArray.includes(item)) {
-            //     const productButton = productNode.querySelector('.product__button') as HTMLElement;
-            //     setButtonInCart(productButton);
-            // }
-
-            cartArray.forEach((cartItem) => {
-                if (cartItem.id === item.id) {
-                    const productButton = productNode.querySelector('.product__button') as HTMLElement;
-                    setButtonInCart(productButton);
-                }
-            });
+            if (cartArray.includes(item)) {
+                const productButton = productNode.querySelector('.product__button') as HTMLElement;
+                setButtonInCart(productButton);
+            }
 
             catalogMain?.append(productNode);
         });
@@ -124,7 +114,7 @@ export function numberOfProductsInCatalog(): void {
     foundProducts.textContent = String(numberOfProducts);
 }
 
-function setButtonInCart(element: HTMLElement): void {
+export function setButtonInCart(element: HTMLElement): void {
     element.classList.toggle('product__button_active');
     element.textContent = 'In Cart';
     element.setAttribute('disabled', '');
