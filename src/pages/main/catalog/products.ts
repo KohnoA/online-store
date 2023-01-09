@@ -160,10 +160,6 @@ function catalogHeaderEvents(arr: Array<Product>) {
     selectSortBy.selectedIndex = Number(objectURL.sort);
 
     setGridSelection(objectURL.show);
-    // const showInput = document.querySelector('.catalog__grid-selection') as HTMLSelectElement;
-    // const valueShowInput = !!objectURL.search;
-    // valueShowInput ? (showInput.selectedIndex = 1) : (showInput.selectedIndex = 0);
-
     isCheck(objectURL);
 
     result = sortProductsArray(

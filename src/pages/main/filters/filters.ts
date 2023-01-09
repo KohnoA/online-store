@@ -29,14 +29,15 @@ export function createAsideBar() {
 }
 
 function createButtons() {
-    const container = func.createElement('div', 'aside-container-btn');
+    const container = func.createElement('div', 'aside-container-btns');
 
     const btnAmount = 2;
     const classes = ['reset', 'copy'];
+    const texts = ['Reset', 'Copy link'];
 
     for (let i = 0; i < btnAmount; i++) {
-        const btn = func.createElement('button', 'aside-container-btn', `aside__${classes[i]}`);
-        btn.textContent = classes[i][0].toUpperCase() + classes[i].slice(1);
+        const btn = func.createElement('button', 'aside-container__btn', `aside__${classes[i]}`);
+        btn.textContent = texts[i];
         container.append(btn);
     }
 
@@ -315,4 +316,17 @@ function setValueToDualSlider(objectURL: URL) {
         maxInput.value = `${max}`;
         formControlMax.value = `${max}`;
     });
+}
+
+export function resetFilters(e: Event) {
+    const target = e.target as HTMLElement;
+
+    if (!target.closest('.aside__reset')) return;
+
+    localStorage.removeItem('url');
+
+    const url = window.location.href.split('?')[0];
+    window.history.pushState(null, '', url);
+
+    showProductsList();
 }
