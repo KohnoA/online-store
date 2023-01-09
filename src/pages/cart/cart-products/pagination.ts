@@ -83,6 +83,9 @@ export function recreateProductsInPage(): void {
     const cartMain = document.querySelector('.in-cart__main') as HTMLElement;
     const currentPage = document.getElementById('current-page-cart') as HTMLElement;
     const currentPageNumber = Number(currentPage.textContent);
+    const limitInput = document.getElementById('limit-input') as HTMLInputElement;
+
+    limitInput.max = String(cartArray.length);
 
     if (cartMain.innerHTML === '' && currentPageNumber !== 1) {
         prevPage();
