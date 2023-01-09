@@ -4,6 +4,7 @@ import { createFooter } from '../../components/footer/footer';
 import { createFilterPage } from '../main/main';
 import { create404page } from '../404/404';
 import { createCart } from '../cart/cart';
+import { createProductPage } from '../product/product';
 import { Pages } from '../../constants/data/data';
 
 export function createApp(): void {
@@ -27,7 +28,6 @@ export function routing() {
 
     if (hash === Pages.main) createFilterPage();
     else if (hash === Pages.cart) createCart();
-    // Здесь, должна быть твоя функция, что-то типа:
-    //else if (hash.startsWith(Pages.product)) createProductPage();
+    else if (hash.startsWith(Pages.product)) createProductPage();
     else create404page();
 }
