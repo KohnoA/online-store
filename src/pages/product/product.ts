@@ -7,7 +7,7 @@ import { showPopUp } from '../../components/popup/popup';
 import { cartArray } from '../../constants/data/data';
 import { routing } from '../app/createApp';
 
-export function createProductPage(): void {
+export async function createProductPage(): Promise<void> {
     const productId = Number(window.location.hash.split('/')[1]) - 1;
     const productObj: Product = products.products[productId];
     const main = document.querySelector('.main') as HTMLElement;
@@ -16,7 +16,7 @@ export function createProductPage(): void {
     const breadCrumbs = createBreadCrumbs(productObj);
     const productInfo = createDescription(productObj);
 
-    container.append(breadCrumbs, productInfo);
+    container.append(breadCrumbs, await productInfo);
     main.append(container);
 }
 
@@ -60,12 +60,7 @@ function createDescription(productObj: Product): HTMLElement {
     const buyNow = utils.createElement('button', 'summary__buy-now');
     const priceItem = utils.createElement('div', 'product-page-price');
 
-    productObj.images.forEach((src) => {
-        const image = utils.createElement('div', 'slide');
-
-        setProductImage(image, src);
-        slidesWrap.append(image);
-    });
+    setProductImagesNoDublicates(productObj.images, slidesWrap);
 
     if (cartArray.includes(productObj)) {
         setButtonInCart(addButton);
@@ -86,7 +81,7 @@ function createDescription(productObj: Product): HTMLElement {
 
     slidesWrap.addEventListener('click', changePhoto);
     buyNow.addEventListener('click', () => {
-        cartArray.push(productObj);
+        if (!cartArray.includes(productObj)) cartArray.push(productObj);
         window.history.pushState({}, '', '#cart');
         routing();
         showPopUp();
@@ -101,6 +96,24 @@ function createDescription(productObj: Product): HTMLElement {
     });
 
     return productInfo;
+}
+
+async function setProductImagesNoDublicates(arr: Array<string>, container: HTMLElement): Promise<void> {
+    const sizeImages: Array<number> = [];
+
+    for (const src of arr) {
+        const image = utils.createElement('div', 'slide');
+
+        const res = await fetch(src);
+        const size = (await res.blob()).size;
+
+        if (!sizeImages.includes(size)) {
+            setProductImage(image, src);
+            container.append(image);
+        }
+
+        sizeImages.push(size);
+    }
 }
 
 function changePhoto(event: Event): void {
