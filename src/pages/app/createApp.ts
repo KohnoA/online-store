@@ -19,6 +19,7 @@ export function createApp(): void {
 
     routing();
     window.addEventListener('hashchange', routing);
+    window.addEventListener('DOMContentLoaded', routing);
 }
 
 export function routing() {

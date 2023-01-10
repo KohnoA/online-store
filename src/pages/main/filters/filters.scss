@@ -39,12 +39,23 @@
 
     .aside-container__btn {
         background-color: transparent;
-        border: 1px solid black;
-        border-radius: 3px;
-        padding: 1px 6px;
+        color: black;
+        border-bottom: 1px solid #ccc;
+        // border-radius: 3px;
+        padding: 5px 6px;
         line-height: 120%;
         font-size: 0.95rem;
         text-align: center;
+        transition: .2s;
+
+        &:hover {
+            background-color: #ccc;
+            color: black;
+        }
+
+        &:active {
+            opacity: .7;
+        }
     }
 }
 
