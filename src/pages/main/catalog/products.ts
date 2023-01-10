@@ -7,7 +7,7 @@ import { getProductsByValues } from '../../../utils/index';
 import { isCheck } from '../filters/filters';
 import { setGridSelection } from './catalog';
 
-export function showProductsList(searchValue?: string, sortBy?: string): void {
+export function showProductsList(): void {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
     let productList: Array<Product> = [...products.products];

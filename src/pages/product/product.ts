@@ -5,11 +5,11 @@ import { Product } from 'constants/types/types';
 import { setProductImage, setButtonInCart } from '../main/catalog/products';
 import { showPopUp } from '../../components/popup/popup';
 import { cartArray } from '../../constants/data/data';
+import { routing } from '../app/createApp';
 
 export function createProductPage(): void {
     const productId = Number(window.location.hash.split('/')[1]) - 1;
     const productObj: Product = products.products[productId];
-    console.log(productObj);
     const main = document.querySelector('.main') as HTMLElement;
     const container = utils.createElement('div', 'container', 'product-page-container');
 
@@ -85,7 +85,12 @@ function createDescription(productObj: Product): HTMLElement {
     productInfo.append(title, wrapper);
 
     slidesWrap.addEventListener('click', changePhoto);
-    buyNow.addEventListener('click', showPopUp);
+    buyNow.addEventListener('click', () => {
+        cartArray.push(productObj);
+        window.history.pushState({}, '', '#cart');
+        routing();
+        showPopUp();
+    });
     addButton.addEventListener('click', () => {
         setButtonInCart(addButton);
         cartArray.push(productObj);
