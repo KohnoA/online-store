@@ -85,6 +85,10 @@ function createDescription(productObj: Product): HTMLElement {
         window.history.pushState({}, '', '#cart');
         routing();
         showPopUp();
+        utils.setSumAndQuantityInCart(
+            document.getElementById('total-cash'),
+            document.getElementById('count-purchases')
+        );
     });
     addButton.addEventListener('click', () => {
         setButtonInCart(addButton);
