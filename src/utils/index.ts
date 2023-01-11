@@ -171,3 +171,14 @@ export function beforeLoad() {
         if (currURL !== windowURL) window.history.pushState(null, '', url);
     }
 }
+
+export function dropOrSetItemInCart(product: Product): void {
+    const isProductInCart = cartArray.findIndex((item) => item.id === product.id);
+
+    if (isProductInCart !== -1) {
+        delete cartArray[isProductInCart].count;
+        cartArray.splice(isProductInCart, 1);
+    } else {
+        cartArray.push(product);
+    }
+}

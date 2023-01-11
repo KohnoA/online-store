@@ -7,7 +7,7 @@ import { showPopUp } from '../../components/popup/popup';
 import { cartArray } from '../../constants/data/data';
 import { routing } from '../app/createApp';
 
-export async function createProductPage(): Promise<void> {
+export function createProductPage(): void {
     const productId = Number(window.location.hash.split('/')[1]) - 1;
     const productObj: Product = products.products[productId];
     const main = document.querySelector('.main') as HTMLElement;
@@ -16,7 +16,7 @@ export async function createProductPage(): Promise<void> {
     const breadCrumbs = createBreadCrumbs(productObj);
     const productInfo = createDescription(productObj);
 
-    container.append(breadCrumbs, await productInfo);
+    container.append(breadCrumbs, productInfo);
     main.append(container);
 }
 
@@ -70,7 +70,7 @@ function createDescription(productObj: Product): HTMLElement {
     setProductImage(grandPhoto, productObj.thumbnail);
     title.textContent = productObj.title;
 
-    if (cartArray.includes(productObj)) {
+    if (cartArray.some((item) => item.id === productObj.id)) {
         setButtonInCart(addButton);
     }
 
@@ -81,7 +81,7 @@ function createDescription(productObj: Product): HTMLElement {
 
     slidesWrap.addEventListener('click', changePhoto);
     buyNow.addEventListener('click', () => {
-        if (!cartArray.includes(productObj)) cartArray.push(productObj);
+        if (!cartArray.some((item) => item.id === productObj.id)) cartArray.push(productObj);
         window.history.pushState({}, '', '#cart');
         routing();
         showPopUp();
@@ -93,17 +93,7 @@ function createDescription(productObj: Product): HTMLElement {
     addButton.addEventListener('click', () => {
         setButtonInCart(addButton);
 
-        if (cartArray.includes(productObj)) {
-            cartArray.forEach((item, index) => {
-                if (item === productObj) {
-                    delete item.count;
-                    cartArray.splice(index, 1);
-                }
-            });
-        } else {
-            cartArray.push(productObj);
-        }
-
+        utils.dropOrSetItemInCart(productObj);
         utils.setSumAndQuantityInCart(
             document.getElementById('total-cash'),
             document.getElementById('count-purchases')
