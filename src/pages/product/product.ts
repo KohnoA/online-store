@@ -62,10 +62,6 @@ function createDescription(productObj: Product): HTMLElement {
 
     setProductImagesNoDublicates(productObj.images, slidesWrap);
 
-    if (cartArray.includes(productObj)) {
-        setButtonInCart(addButton);
-    }
-
     priceItem.textContent = `${productObj.price}€`;
     addButton.setAttribute('type', 'button');
     buyNow.setAttribute('type', 'button');
@@ -73,6 +69,10 @@ function createDescription(productObj: Product): HTMLElement {
     buyNow.textContent = 'Buy now';
     setProductImage(grandPhoto, productObj.thumbnail);
     title.textContent = productObj.title;
+
+    if (cartArray.includes(productObj)) {
+        setButtonInCart(addButton);
+    }
 
     price.append(priceItem, addButton, buyNow);
     productPhoto.append(slidesWrap, grandPhoto);
@@ -92,7 +92,18 @@ function createDescription(productObj: Product): HTMLElement {
     });
     addButton.addEventListener('click', () => {
         setButtonInCart(addButton);
-        cartArray.push(productObj);
+
+        if (cartArray.includes(productObj)) {
+            cartArray.forEach((item, index) => {
+                if (item === productObj) {
+                    delete item.count;
+                    cartArray.splice(index, 1);
+                }
+            });
+        } else {
+            cartArray.push(productObj);
+        }
+
         utils.setSumAndQuantityInCart(
             document.getElementById('total-cash'),
             document.getElementById('count-purchases')

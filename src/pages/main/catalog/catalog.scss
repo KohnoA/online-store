@@ -33,7 +33,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 6px;
     margin-bottom: 30px;
     border-bottom: 1px solid #ccc;
 }
@@ -163,14 +163,10 @@
     background-color: white;
     border: 1px solid black;
 
-    &:disabled {
-        cursor: default;
-        opacity: .6;
-    }
-
     &:hover {
         color: black;
         background-color: white;
+        opacity: .7;
     }
 }
 

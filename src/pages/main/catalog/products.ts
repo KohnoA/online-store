@@ -99,7 +99,18 @@ function productButtonEvent(event: Event): void {
     const productList: Array<Product> = products.products;
     const addProduct = productList.find((item) => item.title === targetProductTitle);
 
-    if (addProduct) cartArray.push(addProduct);
+    if (addProduct) {
+        if (cartArray.includes(addProduct)) {
+            cartArray.forEach((item, index) => {
+                if (item.title === targetProductTitle) {
+                    delete item.count;
+                    cartArray.splice(index, 1);
+                }
+            });
+        } else {
+            cartArray.push(addProduct);
+        }
+    }
 
     setButtonInCart(target);
     utils.setSumAndQuantityInCart(document.getElementById('total-cash'), document.getElementById('count-purchases'));
@@ -116,8 +127,11 @@ export function numberOfProductsInCatalog(): void {
 
 export function setButtonInCart(element: HTMLElement): void {
     element.classList.toggle('product__button_active');
-    element.textContent = 'In Cart';
-    element.setAttribute('disabled', '');
+    if (element.classList.contains('product__button_active')) {
+        element.textContent = 'Drop';
+    } else {
+        element.textContent = 'Add to cart';
+    }
 }
 
 function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Product> {
