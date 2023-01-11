@@ -36,12 +36,12 @@ module.exports = {
             favicon: './assets/favicon.ico',
         }),
         new CleanWebpackPlugin(),
-        // new CopyWebpackPlugin({
-        //   patterns: [{
-        //     from: path.resolve(__dirname, './src/assets/favicon.ico'),
-        //     to: path.resolve(__dirname, './dist'),
-        //   }],
-        // }),
+        new CopyWebpackPlugin({
+          patterns: [{
+            from: path.resolve(__dirname, './src/_redirects'),
+            to: path.resolve(__dirname, './dist'),
+          }],
+        }),
         new MiniCssExtractPlugin({
             filename: '[contenthash].css',
         }),
