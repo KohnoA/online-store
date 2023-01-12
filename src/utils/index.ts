@@ -2,7 +2,7 @@ import { routing } from '../pages/app/createApp';
 import { Pages, cartArray, categories } from '../constants/data/data';
 import { showProductsList } from '../pages/main/catalog/products';
 import { Product, URL } from 'constants/types/types';
-import { setValueToDualSlider } from '../pages/main/filters/filters';
+import { setValueToDualSliders } from '../pages/main/filters/filters';
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -166,7 +166,7 @@ export function beforeLoad() {
         if (currURL !== windowURL) window.history.pushState(null, '', url);
     }
 
-    setValueToDualSlider(getURLStringAsObj());
+    setValueToDualSliders(getURLStringAsObj());
 }
 
 export function dropOrSetItemInCart(product: Product): void {

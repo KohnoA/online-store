@@ -242,10 +242,12 @@ function changeCheckboxes(e: Event) {
     const li = form.parentElement as HTMLElement;
     const category = (li.querySelector('.aside-product__text') as HTMLElement).textContent?.toLowerCase() as string;
 
-    setURLFiltersKey(category, value);
+    const productList = setURLFiltersKey(category, value);
+
+    changeValueOfDualSliderFromCheckbox(productList);
 }
 
-function setURLFiltersKey(category: string, value: string): void {
+function setURLFiltersKey(category: string, value: string) {
     const url = new URL(window.location.href);
 
     if (!url.search) {
@@ -262,7 +264,7 @@ function setURLFiltersKey(category: string, value: string): void {
 
     window.history.pushState(null, '', url);
 
-    showProductsList();
+    return showProductsList();
 }
 
 function changeDualInput(e: Event) {
@@ -296,7 +298,7 @@ export function isCheck(objectURL: URL) {
     }
 }
 
-export function setValueToDualSlider(objectURL: URL) {
+export function setValueToDualSliders(objectURL: URL) {
     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
     sliders.forEach((category, i) => {
@@ -350,29 +352,29 @@ function changeAmountOfProducts(product: Product, category: string) {
     span.textContent = text.join('/');
 }
 
-// function res(productList: Product[]) {
-//     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
+function changeValueOfDualSliderFromCheckbox(productList: Product[]) {
+    const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
-//     sliders.forEach((category, i) => {
-//         let min = productList[0][category.toLowerCase()];
-//         let max = productList[0][category.toLowerCase()];
+    sliders.forEach((category, i) => {
+        let min = productList[0][category.toLowerCase()];
+        let max = productList[0][category.toLowerCase()];
 
-//         productList.forEach((product) => {
-//             if (product[category.toLowerCase()] < min) min = product[category.toLowerCase()];
-//             if (product[category.toLowerCase()] > max) max = product[category.toLowerCase()];
-//         });
+        productList.forEach((product) => {
+            if (product[category.toLowerCase()] < min) min = product[category.toLowerCase()];
+            if (product[category.toLowerCase()] > max) max = product[category.toLowerCase()];
+        });
 
-//         const minInput = blocks[i].querySelector(`#inputMin${category.toLowerCase()}`) as HTMLInputElement;
-//         const maxInput = blocks[i].querySelector(`#inputMax${category.toLowerCase()}`) as HTMLInputElement;
-//         const form = blocks[i].parentElement as HTMLFormElement;
-//         const formControlMin = form.querySelector('.aside-slider-control__num_min') as HTMLInputElement;
-//         const formControlMax = form.querySelector('.aside-slider-control__num_max') as HTMLInputElement;
+        const minInput = blocks[i].querySelector(`#inputMin${category.toLowerCase()}`) as HTMLInputElement;
+        const maxInput = blocks[i].querySelector(`#inputMax${category.toLowerCase()}`) as HTMLInputElement;
+        const form = blocks[i].parentElement as HTMLFormElement;
+        const formControlMin = form.querySelector('.aside-slider-control__num_min') as HTMLInputElement;
+        const formControlMax = form.querySelector('.aside-slider-control__num_max') as HTMLInputElement;
 
-//         minInput.value = `${min}`;
-//         formControlMin.value = `${min}`;
-//         maxInput.value = `${max}`;
-//         formControlMax.value = `${max}`;
+        minInput.value = `${min}`;
+        formControlMin.value = `${min}`;
+        maxInput.value = `${max}`;
+        formControlMax.value = `${max}`;
 
-//         coloredSlider(minInput, maxInput, category.toLowerCase());
-//     });
-// }
+        coloredSlider(minInput, maxInput, category.toLowerCase());
+    });
+}

@@ -7,7 +7,7 @@ import { getProductsByValues } from '../../../utils/index';
 import { isCheck, calculateFiltersValue } from '../filters/filters';
 import { setGridSelection } from './catalog';
 
-export function showProductsList(): void {
+export function showProductsList() {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
     let productList: Array<Product> = [...products.products];
@@ -35,6 +35,8 @@ export function showProductsList(): void {
     catalogMain.addEventListener('click', utils.switchOnProductPage);
 
     numberOfProductsInCatalog();
+
+    return productList;
 }
 
 function createProductCard(item: Product): HTMLElement {
