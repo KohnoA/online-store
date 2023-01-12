@@ -294,11 +294,9 @@ export function isCheck(objectURL: URL) {
 
         createProductsListElements(categoryArr, containers[i], objectURL, checkboxes[i].toLowerCase());
     }
-
-    setValueToDualSlider(objectURL);
 }
 
-function setValueToDualSlider(objectURL: URL) {
+export function setValueToDualSlider(objectURL: URL) {
     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
     sliders.forEach((category, i) => {
@@ -311,10 +309,10 @@ function setValueToDualSlider(objectURL: URL) {
         const formControlMin = form.querySelector('.aside-slider-control__num_min') as HTMLInputElement;
         const formControlMax = form.querySelector('.aside-slider-control__num_max') as HTMLInputElement;
 
-        minInput.value = `${min}`;
         formControlMin.value = `${min}`;
-        maxInput.value = `${max}`;
+        minInput.value = `${max}`;
         formControlMax.value = `${max}`;
+        maxInput.value = `${min}`;
 
         coloredSlider(minInput, maxInput, category.toLowerCase());
     });
@@ -352,7 +350,7 @@ function changeAmountOfProducts(product: Product, category: string) {
     span.textContent = text.join('/');
 }
 
-// export function res(productList: Product[]) {
+// function res(productList: Product[]) {
 //     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
 //     sliders.forEach((category, i) => {

@@ -2,6 +2,7 @@ import { routing } from '../pages/app/createApp';
 import { Pages, cartArray, categories } from '../constants/data/data';
 import { showProductsList } from '../pages/main/catalog/products';
 import { Product, URL } from 'constants/types/types';
+import { setValueToDualSlider } from '../pages/main/filters/filters';
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -125,10 +126,14 @@ function sortPriceAndStockValue(arr: Array<Product>, objectURL: URL) {
     const productsArr = [...arr];
     const price = objectURL['price'].map((item) => Number(item));
     const stock = objectURL['stock'].map((item) => Number(item));
+    const minPrice = Math.min(...price);
+    const maxPrice = Math.max(...price);
+    const minStock = Math.min(...stock);
+    const maxStock = Math.max(...stock);
 
     return productsArr.filter((product) => {
-        if (product.price >= price[0] && product.price <= price[1]) {
-            if (product.stock >= stock[0] && product.stock <= stock[1]) return product;
+        if (product.price >= minPrice && product.price <= maxPrice) {
+            if (product.stock >= minStock && product.stock <= maxStock) return product;
         }
     });
 }
@@ -160,6 +165,8 @@ export function beforeLoad() {
 
         if (currURL !== windowURL) window.history.pushState(null, '', url);
     }
+
+    setValueToDualSlider(getURLStringAsObj());
 }
 
 export function dropOrSetItemInCart(product: Product): void {

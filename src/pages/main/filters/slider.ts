@@ -24,7 +24,7 @@ export function createPriceAndStockSlider(form: HTMLElement, category: string) {
     );
 }
 
-export function setValueInput(
+function setValueInput(
     inputMin: HTMLInputElement,
     formControlMin: HTMLInputElement,
     inputMax: HTMLInputElement,
