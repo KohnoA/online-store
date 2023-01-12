@@ -1,6 +1,7 @@
 import './popup.scss';
 import * as utils from '../../utils/index';
 import * as form from './check-form';
+import { cartArray } from '../../constants/data/data';
 
 export function showPopUp(): void {
     const main = document.querySelector('.main') as HTMLElement;
@@ -117,6 +118,8 @@ function checkForm(event: Event): void {
     if (canSubmit) {
         const popup = document.querySelector('.popup') as HTMLElement;
         popup.innerHTML = '';
+
+        cartArray.splice(0, cartArray.length);
 
         let count = 5;
         popup.classList.add('popup__secsecfull');

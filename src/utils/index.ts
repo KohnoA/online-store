@@ -1,9 +1,7 @@
 import { routing } from '../pages/app/createApp';
-import { Pages, cartArray } from '../constants/data/data';
+import { Pages, cartArray, categories } from '../constants/data/data';
 import { showProductsList } from '../pages/main/catalog/products';
 import { Product, URL } from 'constants/types/types';
-
-const categories = ['category', 'brand', 'price', 'stock', 'sort', 'search', 'show'];
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -104,14 +102,6 @@ export function setFiltersToLocalStorage(e: Event) {
     const target = e.target as HTMLElement;
 
     if (target !== document.querySelector('.aside__copy')) return;
-
-    // const objectURL = getURLStringAsObj();
-
-    // for (const key in objectURL) {
-    //     if (objectURL[key] !== null) {
-    //         localStorage.setItem(key, JSON.stringify(objectURL[key]));
-    //     }
-    // }
 
     const text = target.textContent;
     const width = getComputedStyle(target).width;

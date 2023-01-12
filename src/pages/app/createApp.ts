@@ -20,6 +20,7 @@ export function createApp(): void {
 
     recreateCart();
     routing();
+
     window.addEventListener('hashchange', routing);
     window.addEventListener('beforeunload', saveCart);
 }
@@ -27,6 +28,7 @@ export function createApp(): void {
 export function routing() {
     const hash = window.location.hash;
     const main = document.querySelector('.main') as HTMLElement;
+
     main.innerHTML = '';
 
     if (hash === Pages.main) createFilterPage();
@@ -42,6 +44,8 @@ function saveCart(): void {
 function recreateCart(): void {
     if (!localStorage.getItem('cart')) return;
     const localCart: Array<Product> = JSON.parse(localStorage.getItem('cart') as string);
+
     localCart.forEach((item) => cartArray.push(item));
+
     utils.setSumAndQuantityInCart(document.getElementById('total-cash'), document.getElementById('count-purchases'));
 }

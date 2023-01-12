@@ -108,7 +108,6 @@ async function setProductImagesNoDublicates(arr: Array<string>, container: HTMLE
 
     for (const src of arr) {
         const image = utils.createElement('div', 'slide');
-
         const res = await fetch(src);
         const size = (await res.blob()).size;
 
