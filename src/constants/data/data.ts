@@ -26,3 +26,11 @@ export const enum Pages {
     cart = '#cart',
     product = '#product-details/',
 }
+
+export const categories = ['category', 'brand', 'price', 'stock', 'sort', 'search', 'show'];
+
+export const enum PaySystems {
+    visa = '4',
+    mastercard = '5',
+    maestro = '6',
+}

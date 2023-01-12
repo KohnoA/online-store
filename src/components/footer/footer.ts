@@ -40,6 +40,7 @@ function createGitHubs(): HTMLElement {
     githubLinks.append(githubSqooa);
     githubLinks.append(' / ');
     githubLinks.append(githubKohnoa);
+
     return githubLinks;
 }
 
@@ -55,5 +56,6 @@ function createRss(): HTMLElement {
     rssImage.setAttribute('alt', 'Rsschool');
 
     rssLink.append(rssImage);
+
     return rssLink;
 }

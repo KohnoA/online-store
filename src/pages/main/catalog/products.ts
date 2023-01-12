@@ -23,7 +23,7 @@ export function showProductsList(): void {
         productList.forEach((item) => {
             const productNode = createProductCard(item);
 
-            if (cartArray.includes(item)) {
+            if (cartArray.some((cartItem) => item.id === cartItem.id)) {
                 const productButton = productNode.querySelector('.product__button') as HTMLElement;
                 setButtonInCart(productButton);
             }
@@ -99,7 +99,7 @@ function productButtonEvent(event: Event): void {
     const productList: Array<Product> = products.products;
     const addProduct = productList.find((item) => item.title === targetProductTitle);
 
-    if (addProduct) cartArray.push(addProduct);
+    if (addProduct) utils.dropOrSetItemInCart(addProduct);
 
     setButtonInCart(target);
     utils.setSumAndQuantityInCart(document.getElementById('total-cash'), document.getElementById('count-purchases'));
@@ -116,8 +116,11 @@ export function numberOfProductsInCatalog(): void {
 
 export function setButtonInCart(element: HTMLElement): void {
     element.classList.toggle('product__button_active');
-    element.textContent = 'In Cart';
-    element.setAttribute('disabled', '');
+    if (element.classList.contains('product__button_active')) {
+        element.textContent = 'Drop';
+    } else {
+        element.textContent = 'Add to cart';
+    }
 }
 
 function sortProductsArray(originArr: Array<Product>, sortBy: string): Array<Product> {

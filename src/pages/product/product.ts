@@ -5,11 +5,11 @@ import { Product } from 'constants/types/types';
 import { setProductImage, setButtonInCart } from '../main/catalog/products';
 import { showPopUp } from '../../components/popup/popup';
 import { cartArray } from '../../constants/data/data';
+import { routing } from '../app/createApp';
 
 export function createProductPage(): void {
     const productId = Number(window.location.hash.split('/')[1]) - 1;
     const productObj: Product = products.products[productId];
-    console.log(productObj);
     const main = document.querySelector('.main') as HTMLElement;
     const container = utils.createElement('div', 'container', 'product-page-container');
 
@@ -60,16 +60,7 @@ function createDescription(productObj: Product): HTMLElement {
     const buyNow = utils.createElement('button', 'summary__buy-now');
     const priceItem = utils.createElement('div', 'product-page-price');
 
-    productObj.images.forEach((src) => {
-        const image = utils.createElement('div', 'slide');
-
-        setProductImage(image, src);
-        slidesWrap.append(image);
-    });
-
-    if (cartArray.includes(productObj)) {
-        setButtonInCart(addButton);
-    }
+    setProductImagesNoDublicates(productObj.images, slidesWrap);
 
     priceItem.textContent = `${productObj.price}€`;
     addButton.setAttribute('type', 'button');
@@ -79,16 +70,30 @@ function createDescription(productObj: Product): HTMLElement {
     setProductImage(grandPhoto, productObj.thumbnail);
     title.textContent = productObj.title;
 
+    if (cartArray.some((item) => item.id === productObj.id)) {
+        setButtonInCart(addButton);
+    }
+
     price.append(priceItem, addButton, buyNow);
     productPhoto.append(slidesWrap, grandPhoto);
     wrapper.append(productPhoto, description, price);
     productInfo.append(title, wrapper);
 
     slidesWrap.addEventListener('click', changePhoto);
-    buyNow.addEventListener('click', showPopUp);
+    buyNow.addEventListener('click', () => {
+        if (!cartArray.some((item) => item.id === productObj.id)) cartArray.push(productObj);
+        window.history.pushState({}, '', '#cart');
+        routing();
+        showPopUp();
+        utils.setSumAndQuantityInCart(
+            document.getElementById('total-cash'),
+            document.getElementById('count-purchases')
+        );
+    });
     addButton.addEventListener('click', () => {
         setButtonInCart(addButton);
-        cartArray.push(productObj);
+
+        utils.dropOrSetItemInCart(productObj);
         utils.setSumAndQuantityInCart(
             document.getElementById('total-cash'),
             document.getElementById('count-purchases')
@@ -96,6 +101,23 @@ function createDescription(productObj: Product): HTMLElement {
     });
 
     return productInfo;
+}
+
+async function setProductImagesNoDublicates(arr: Array<string>, container: HTMLElement): Promise<void> {
+    const sizeImages: Array<number> = [];
+
+    for (const src of arr) {
+        const image = utils.createElement('div', 'slide');
+        const res = await fetch(src);
+        const size = (await res.blob()).size;
+
+        if (!sizeImages.includes(size)) {
+            setProductImage(image, src);
+            container.append(image);
+        }
+
+        sizeImages.push(size);
+    }
 }
 
 function changePhoto(event: Event): void {

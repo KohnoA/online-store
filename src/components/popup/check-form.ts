@@ -1,4 +1,5 @@
 import * as utils from '../../utils/index';
+import { PaySystems } from '../../constants/data/data';
 
 function showError(): HTMLElement {
     const error = utils.createElement('div', 'error-massage');
@@ -139,13 +140,13 @@ export function checkCardNumber(): boolean {
 
     cardNumber.value = value.replace(/\D/, '');
 
-    if (value[0] === '4') {
+    if (value[0] === PaySystems.visa) {
         system.style.backgroundImage = `url('https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png')`;
         system.style.backgroundSize = '70%';
-    } else if (value[0] === '5') {
+    } else if (value[0] === PaySystems.mastercard) {
         system.style.backgroundImage = `url('https://www.mastercard.hu/content/dam/public/mastercardcom/eu/hu/images/mc-logo-52.svg')`;
         system.style.backgroundSize = '65%';
-    } else if (value[0] === '6') {
+    } else if (value[0] === PaySystems.maestro) {
         system.style.backgroundImage = `url('https://brand.mastercard.com/content/dam/mccom/brandcenter/thumbnails/mcbc_dla_maestro-vrt-pos_60px.png')`;
         system.style.backgroundSize = '65%';
     } else {
