@@ -1,7 +1,8 @@
 import { routing } from '../pages/app/createApp';
 import { Pages, cartArray, categories } from '../constants/data/data';
 import { showProductsList } from '../pages/main/catalog/products';
-import { Product, URL } from 'constants/types/types';
+import { Product, URL, C } from 'constants/types/types';
+import { setValueToDualSliders } from '../pages/main/filters/filters';
 
 export function createElement(element: string, className: string, anotherClass?: string): HTMLElement {
     const elem = document.createElement(element);
@@ -91,11 +92,13 @@ export function getURLStringAsObj() {
             acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : ['10', '1749'];
         else if (curr === 'stock')
             acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : ['2', '150'];
-        else acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : null;
-        return acc;
-    }, {});
+        else if (curr === 'brand' || curr === 'category' || curr === 'search')
+            acc[curr] = url.searchParams.get(curr) ? (url.searchParams.get(curr) as string).split('↕') : null;
 
-    return URLKeys as URL;
+        return acc;
+    }, {} as URL);
+
+    return URLKeys;
 }
 
 export function setFiltersToLocalStorage(e: Event) {
@@ -123,12 +126,16 @@ export function getProductsByValues(arr: Array<Product>, objectURL: URL) {
 
 function sortPriceAndStockValue(arr: Array<Product>, objectURL: URL) {
     const productsArr = [...arr];
-    const price = objectURL['price'].map((item) => Number(item));
-    const stock = objectURL['stock'].map((item) => Number(item));
+    const price = (objectURL['price'] as string[]).map((item) => Number(item));
+    const stock = (objectURL['stock'] as string[]).map((item) => Number(item));
+    const minPrice = Math.min(...price);
+    const maxPrice = Math.max(...price);
+    const minStock = Math.min(...stock);
+    const maxStock = Math.max(...stock);
 
     return productsArr.filter((product) => {
-        if (product.price >= price[0] && product.price <= price[1]) {
-            if (product.stock >= stock[0] && product.stock <= stock[1]) return product;
+        if (product.price >= minPrice && product.price <= maxPrice) {
+            if (product.stock >= minStock && product.stock <= maxStock) return product;
         }
     });
 }
@@ -146,7 +153,7 @@ function selectCategoryAndBrand(arr: Array<Product>, objectURL: URL) {
 
 function myFilter(productsArr: Product[], categories: string[], category: string) {
     return productsArr.filter((product) => {
-        if (categories && categories.includes(product[category].toLowerCase())) return product;
+        if (categories.includes((product[category as C] as string).toLowerCase())) return product;
     });
 }
 
@@ -160,6 +167,8 @@ export function beforeLoad() {
 
         if (currURL !== windowURL) window.history.pushState(null, '', url);
     }
+
+    setValueToDualSliders(getURLStringAsObj());
 }
 
 export function dropOrSetItemInCart(product: Product): void {

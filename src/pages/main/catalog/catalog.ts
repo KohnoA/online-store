@@ -88,7 +88,7 @@ function createSelectGrid(): HTMLElement {
     return container;
 }
 
-export function setGridSelection(value: string) {
+export function setGridSelection(value: string | null) {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const select = document.querySelector('.catalog__grid-selection') as HTMLSelectElement;
 

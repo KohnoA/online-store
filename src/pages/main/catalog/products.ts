@@ -1,13 +1,13 @@
 import products from '../../../constants/products.json';
-import { Product } from 'constants/types/types';
+import { Product, C } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
 import { getProductsByValues } from '../../../utils/index';
-import { isCheck } from '../filters/filters';
+import { isCheck, calculateFiltersValue } from '../filters/filters';
 import { setGridSelection } from './catalog';
 
-export function showProductsList(): void {
+export function showProductsList() {
     const catalogMain = document.querySelector('.catalog__main') as HTMLElement;
     const noProductsFound = utils.createElement('p', 'catalog__not-found');
     let productList: Array<Product> = [...products.products];
@@ -35,6 +35,8 @@ export function showProductsList(): void {
     catalogMain.addEventListener('click', utils.switchOnProductPage);
 
     numberOfProductsInCatalog();
+
+    return productList;
 }
 
 function createProductCard(item: Product): HTMLElement {
@@ -144,7 +146,7 @@ function getProductsBySearchInput(originArr: Array<Product>, searchValue: string
     return originArr.filter((item) => {
         for (const key in item) {
             if (!ignoredKeys.includes(key)) {
-                const keyValue = String(item[key]).toLowerCase();
+                const keyValue = String(item[key as C]).toLowerCase();
 
                 if (keyValue.startsWith(searchValue)) return item;
             }
@@ -162,13 +164,15 @@ function catalogHeaderEvents(arr: Array<Product>) {
     const selectSortBy = document.querySelector('.catalog__sort-selection') as HTMLSelectElement;
     selectSortBy.selectedIndex = Number(objectURL.sort);
 
-    setGridSelection(objectURL.show);
     isCheck(objectURL);
+    setGridSelection(objectURL.show);
 
     result = sortProductsArray(
         getProductsBySearchInput(getProductsByValues(result, objectURL), searchInput.value),
         sortValues[selectSortBy.selectedIndex]
     );
+
+    calculateFiltersValue(result);
 
     return result;
 }

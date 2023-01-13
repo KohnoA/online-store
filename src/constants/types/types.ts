@@ -1,6 +1,6 @@
 export interface Product {
-    brand: string;
-    category: string;
+    brand: string[];
+    category: string[];
     description: string;
     discountPercentage: number;
     id: number;
@@ -23,11 +23,15 @@ export type ArgsDecInc = [HTMLElement, HTMLElement, HTMLElement, Product, number
 export type ArgsCreateNumberControl = [number, number, number, HTMLElement, number | undefined];
 
 export interface URL {
-    brand: string[];
-    category: string[];
-    price: string[];
-    search: string[];
-    show: string;
-    sort: string;
-    stock: string[];
+    brand: string[] | null;
+    category: string[] | null;
+    price: string[] | null;
+    search: string[] | null;
+    show: string | null;
+    sort: string | null;
+    stock: string[] | null;
 }
+
+export type T = keyof URL;
+export type C = keyof Product;
+export type Promo = keyof PromoCodes;
