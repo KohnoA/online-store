@@ -1,6 +1,7 @@
 import productsJson from '../../../constants/products.json';
 import * as func from '../../../utils/index';
 import { Product } from 'constants/types/types';
+import { C } from '../../../constants/types/types';
 
 export function createPriceAndStockSlider(form: HTMLElement, category: string) {
     const slidersControl = func.createElement('div', 'aside-product-form-slider', 'aside-slider');
@@ -96,7 +97,7 @@ function createInputDualSlider(category: string, minMax: string, id: string) {
     input.type = 'range';
     input.min = getMinMaxPriceOrStock(productsJson.products, category, 'min');
     input.max = getMinMaxPriceOrStock(productsJson.products, category, 'max');
-    input.setAttribute('value', input[minMax]);
+    input.setAttribute('value', minMax);
     return input;
 }
 
@@ -114,11 +115,11 @@ function createDualSliderControls(maxMin: string, input: HTMLInputElement) {
 function getMinMaxPriceOrStock(jsonArr: Product[], category: string, maxMin: string) {
     let value: string | undefined;
 
-    jsonArr.forEach((elem) => {
+    jsonArr.forEach((product) => {
         if (maxMin === 'min') {
-            if (!value || elem[category] < value) value = elem[category];
+            if (!value || Number(product[category as C]) < Number(value)) value = product[category as C] as string;
         } else if (maxMin === 'max') {
-            if (!value || elem[category] > value) value = elem[category];
+            if (!value || Number(product[category as C]) > Number(value)) value = product[category as C] as string;
         }
     });
 

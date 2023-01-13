@@ -2,6 +2,7 @@ import './summary.scss';
 import * as utils from '../../../utils/index';
 import { promoCodes, activePromoCodes } from '../../../constants/data/data';
 import { showPopUp } from '../../../components/popup/popup';
+import { Promo } from 'constants/types/types';
 
 export function createSummary(): HTMLElement {
     const summary = utils.createElement('section', 'summary');
@@ -39,7 +40,7 @@ export function followPromoCode(): void {
     const value = input.value.trim().toUpperCase();
 
     if (value in promoCodes) {
-        createPromoCodeItem(input, promoCodes[value]);
+        createPromoCodeItem(input, promoCodes[value as Promo]);
     } else {
         document.querySelector('.summary__promo-code_current')?.remove();
     }

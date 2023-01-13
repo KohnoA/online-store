@@ -1,7 +1,7 @@
 import productsJson from '../../../constants/products.json';
 import languageJson from '../../../constants/language.json';
 import * as func from '../../../utils/index';
-import { Product, URL } from 'constants/types/types';
+import { Product, URL, C, T } from 'constants/types/types';
 import { createPriceAndStockSlider, coloredSlider } from './slider';
 import { showProductsList } from '../catalog/products';
 import './filters.scss';
@@ -124,7 +124,12 @@ function createProductsList(category: string, filtersContainer?: HTMLElement) {
     return form;
 }
 
-function createProductsListElements(map: Map<string, number>, container: HTMLElement, objectURL?: URL, category?) {
+function createProductsListElements(
+    map: Map<string, number>,
+    container: HTMLElement,
+    objectURL?: URL,
+    category?: string
+) {
     container.innerHTML = '';
 
     for (const product of map) {
@@ -133,7 +138,10 @@ function createProductsListElements(map: Map<string, number>, container: HTMLEle
 
         const checkbox = func.createElement('input', 'aside-product-form__checkbox') as HTMLInputElement;
         checkbox.type = 'checkbox';
-        if (objectURL && objectURL[category] !== null) setCheckedToCheckbox(objectURL, category, checkbox, product);
+
+        if (objectURL && category && objectURL[category as T] !== null) {
+            setCheckedToCheckbox(objectURL, category, checkbox, product);
+        }
 
         const a = func.createElement('a', 'aside-product-form__hash') as HTMLAnchorElement;
         a.href = `${product[0]}`;
@@ -150,7 +158,7 @@ function createProductsListElements(map: Map<string, number>, container: HTMLEle
 }
 
 function setCheckedToCheckbox(objectURL: URL, category: string, checkbox: HTMLInputElement, value: [string, number]) {
-    objectURL[category].forEach((elem: string) => {
+    (objectURL[category as T] as string[]).forEach((elem: string) => {
         if (elem === value[0].toLowerCase()) checkbox.setAttribute('checked', 'true');
     });
 }
@@ -159,16 +167,17 @@ function createArrOfProducts(products: Product[], category: string) {
     const map: Map<string, number> = new Map();
 
     products.forEach((product) => {
-        if (typeof product[category] === 'string') {
+        if (typeof product[category as C] === 'string') {
             let num = 1;
 
-            if (map.has(product[category])) {
-                num = (map.get(product[category]) as number) + 1;
+            if (map.has(product[category as C] as string)) {
+                num = (map.get(product[category as C] as string) as number) + 1;
             }
 
-            map.set(product[category], num);
+            map.set(product[category as C] as string, num);
         }
     });
+
     return map;
 }
 
@@ -302,8 +311,8 @@ export function setValueToDualSliders(objectURL: URL) {
     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
     sliders.forEach((category, i) => {
-        const min = Math.min(...objectURL[category.toLocaleLowerCase()].map((item) => Number(item)));
-        const max = Math.max(...objectURL[category.toLocaleLowerCase()].map((item) => Number(item)));
+        const min = Math.min(...(objectURL[category.toLocaleLowerCase() as T] as string[]).map((item) => Number(item)));
+        const max = Math.max(...(objectURL[category.toLocaleLowerCase() as T] as string[]).map((item) => Number(item)));
 
         const minInput = blocks[i].querySelector(`#inputMin${category.toLowerCase()}`) as HTMLInputElement;
         const maxInput = blocks[i].querySelector(`#inputMax${category.toLowerCase()}`) as HTMLInputElement;
@@ -341,7 +350,7 @@ export function calculateFiltersValue(productList: Product[]) {
 }
 
 function changeAmountOfProducts(product: Product, category: string) {
-    const label = document.getElementById(`${product[category]}`) as HTMLElement | null;
+    const label = document.getElementById(`${product[category as keyof Product]}`) as HTMLElement | null;
 
     if (!label) return;
 
@@ -356,12 +365,16 @@ function changeValueOfDualSliderFromCheckbox(productList: Product[]) {
     const blocks = document.querySelectorAll('.aside-slider') as NodeListOf<HTMLDivElement>;
 
     sliders.forEach((category, i) => {
-        let min = productList[0][category.toLowerCase()];
-        let max = productList[0][category.toLowerCase()];
+        let min = productList[0][category.toLowerCase() as C] as number;
+        let max = productList[0][category.toLowerCase() as C] as number;
 
         productList.forEach((product) => {
-            if (product[category.toLowerCase()] < min) min = product[category.toLowerCase()];
-            if (product[category.toLowerCase()] > max) max = product[category.toLowerCase()];
+            if ((product[category.toLowerCase() as C] as number) < min) {
+                min = product[category.toLowerCase() as C] as number;
+            }
+            if ((product[category.toLowerCase() as C] as number) > max) {
+                max = product[category.toLowerCase() as C] as number;
+            }
         });
 
         const minInput = blocks[i].querySelector(`#inputMin${category.toLowerCase()}`) as HTMLInputElement;

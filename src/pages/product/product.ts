@@ -152,10 +152,10 @@ function createDesc(productObj: Product): HTMLElement {
             itemText.textContent = String(productObj.stock);
         } else if (i === 5) {
             itemName.textContent = 'Brand:';
-            itemText.textContent = productObj.brand;
+            itemText.textContent = String(productObj.brand);
         } else if (i === 6) {
             itemName.textContent = 'Brand:';
-            itemText.textContent = productObj.category;
+            itemText.textContent = String(productObj.category);
         }
 
         item.append(itemName, itemText);

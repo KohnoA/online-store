@@ -1,5 +1,5 @@
 import products from '../../../constants/products.json';
-import { Product } from 'constants/types/types';
+import { Product, C } from 'constants/types/types';
 import * as utils from '../../../utils/index';
 import defaultProductImage from '../../../assets/icons/rsschool-logo.svg';
 import { sortValues, cartArray } from '../../../constants/data/data';
@@ -146,7 +146,7 @@ function getProductsBySearchInput(originArr: Array<Product>, searchValue: string
     return originArr.filter((item) => {
         for (const key in item) {
             if (!ignoredKeys.includes(key)) {
-                const keyValue = String(item[key]).toLowerCase();
+                const keyValue = String(item[key as C]).toLowerCase();
 
                 if (keyValue.startsWith(searchValue)) return item;
             }
