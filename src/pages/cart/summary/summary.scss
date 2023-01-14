@@ -1,0 +1,91 @@
+.summary {
+    width: 220px;
+    font-size: 1rem;
+}
+
+.summary__title {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.summary__product-amount {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.summary__total-cash, .summary__total-cash_new {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.summary__total-cash_cross {
+    margin-bottom: 20px;
+    text-decoration: line-through;
+    opacity: .7;
+}
+
+.summary__promo-code {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: inherit;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+}
+
+.summary__code-description {
+    text-align: center;
+    margin-bottom: 50px;
+    opacity: .7;
+}
+
+.summary__buy-now {
+    width: 100%;
+    padding: 15px;
+    text-transform: uppercase;
+    color: white;
+    background-color: black;
+    border-radius: 2px;
+    transition: .2s;
+    
+    &:hover {
+        color: black;
+        background-color: #ccc;
+    }
+
+    &:active {
+        opacity: .6;
+    }
+}
+
+.summary__promo-code_current, .summary__promo-code_active {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.summary__add-promo-code, .summary__drop-promo-code {
+    padding: 5px;
+    margin-top: 10px;
+    text-transform: uppercase;
+    color: white;
+    background-color: black;
+    border-radius: 2px;
+    transition: .2s;
+    
+    &:hover {
+        color: black;
+        background-color: #ccc;
+    }
+
+    &:active {
+        opacity: .6;
+    }
+}

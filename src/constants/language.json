@@ -1,0 +1,12 @@
+{
+    "en": {
+        "search-placeholder": "I find...",
+        "button-showAll": "Show all",
+        "button-hiddenAll": "Hidden"
+    },
+    "ru": {
+        "search-placeholder": "Я ищу...",
+        "button-showAll": "Показать все",
+        "button-hiddenAll": "Скрыть"
+    }
+}
