@@ -1,0 +1,171 @@
+.overlay {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  
+    width: 100%;
+    height: 300vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+}
+
+.popup {
+    position: absolute;
+    z-index: 2;
+
+    top: 50px;
+    left: 50%;
+    margin-left: -285px;
+
+    width: 570px;
+    padding: 20px 30px;
+    text-align: center;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.personal-details__title, .credit-card__title {
+    margin-bottom: 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.3;
+}
+
+.personal-details__item {
+    position: relative;
+    display: flex;
+    margin-bottom: 20px;
+    &:last-child {
+        margin-bottom: 30px;
+    }
+}
+
+.personal-details__name,
+.personal-details__phone,
+.personal-details__address,
+.personal-details__email {
+    flex-grow: 1;
+    text-align: center;
+    padding: 5px 40px;
+    margin: 0 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    padding-top: 30px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    background: rgb(247,247,247);
+    background: linear-gradient(275deg, rgba(247,247,247,1) 0%, rgba(204,204,204,1) 74%);
+    border-radius: 5px;
+    & input {
+        padding: 5px;
+        border-radius: 5px;
+    }
+}
+
+.card__number-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.card__system {
+    padding: 0 20px;
+    background-image: url('https://i.guim.co.uk/img/media/b73cc57cb1d46ae742efd06b6c58805e8600d482/16_0_2443_1466/master/2443.jpg?width=700&quality=85&auto=format&fit=max&s=fb1dca6cdd4589cd9ef2fc941935de71');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.card__number {
+    align-self: center;
+    text-align: center;
+    width: 70%;
+}
+
+.card__other-data {
+    display: flex;
+    margin-bottom: 40px;
+    & input {
+        display: inline-block;
+    }
+}
+
+.card__cvv-label,
+.card__valid-label {
+    position: relative;
+}
+
+.card__valid {
+    width: 50%;
+}
+
+.card__cvv {
+    width: 35%;
+}
+
+.popup__submit {
+    width: 40%;
+    padding: 15px 20px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: white;
+    background-color: black;
+    border-radius: 2px;
+    transition: .2s;
+    
+    &:hover {
+        color: black;
+        background-color: #ccc;
+    }
+
+    &:active {
+        opacity: .6;
+    }
+}
+
+.error {
+    transition: .2s;
+    border-bottom: 1px solid rgb(203, 0, 0);
+}
+
+.error-card {
+    transition: .2s;
+    outline: 1px solid rgb(203, 0, 0);
+}
+
+.error-massage {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: rgb(203, 0, 0);
+}
+
+.card__cvv-label,
+.card__valid-label {
+    & .error-massage {
+        top: -17px;
+        right: 39px;
+    }
+}
+
+.card__number-wrapper {
+    & .error-massage {
+        top: -18px;
+        right: 20px;
+    }
+}
+
+.popup__secsecfull {
+    top: 40%;
+}
